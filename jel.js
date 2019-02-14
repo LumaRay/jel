@@ -5,67 +5,6 @@
     Created by: Yury Laykov / Russia, Zelenograd
     2019
     MIT License
-
-    Usage:
-
-        HTML Elements creation and appending:
-
-        [<parentHTMLElement>.]jel(<arguments>) : HTMLElement - creates a DOM subtree and adds it to parentHTMLElement (document.body by default)
-        arguments: <argument0>, [<argument1>[,<argument2>[,...]]] - arguments are applied in order they are set, and the next one appends to the previous ones
-            argument0 - can be string or {} or []
-                string - set tag / template name
-                {} - <JelElementInitializationObject>
-                [] - array of <JelElementInitializationObjects>
-            argument1+ - can be string or {} or [] or function
-                string - add to inner HTML
-                {} - set <JelElementAttributesAndJelProperties>
-                [] - child <JelElementInitializationObjects>
-                function - called immediately function(<el>){} : boolean
-                    el - current created HTMLElement
-                    if returns false - the will cancel parsing current created tree object and return undefined from current inner jel function
-        JelElementInitializationObject: {<tagName>: <JelElementAttributesAndJelProperties>}
-            tagName - set tag / template name
-        JelElementAttributesAndJelProperties: {<param0>: <val0>[, <param1>: <val1>[, ...]]}
-                param - element's attribute name or a special "jel" attribute name for <JelParameters>
-                val - element's attribute value or a special "jel" attribute name for <JelParameters>
-                    if <param> == "class", <val> can be string or []
-                    if <param> == "style", <val> can be string or {} or []
-                    else <val> should not be {} or []
-        JelParameters: {<param0>: <val0>[, <param1>: <val1>[, ...]]}
-            param - jel special parameter name
-            val - jel special parameter value
-                if <param> == "name", <val> - subelement special jel string name for a separate jel elements' naming tree
-                if <param> == "root", <val> - indicates that this is a component root element, should be empty string ""
-                if <param> == "links", <val> = <JelElementPropertyLinks>
-        JelElementPropertyLinks: {<target0>: <local0>[, <target1>: <local1>[, ...]]} - link properties of a child element to one of it's parent elements
-            target: "<targetElementType>.<targetElementCustomProperty0>[.<targetElementCustomProperty1>[.<targetElementCustomProperty2[...]>]]"
-                targetElementType:
-                    if <targetElementType> == "root", the link is created for a closest parent element marked as jel:{root:""}
-                    if <targetElementType> == "master", the link is created for a closest parent element marked as jel:{name:"..."}
-                targetElementCustomProperty<n> - custom property (sub)name for the selected parent element
-            local: "<localElementCustomProperty0>[.<localElementCustomProperty1>[.<localElementCustomProperty2[...]>]]"
-                localElementCustomProperty<n> - property (sub)name for current created element
-         
-                
-        Using Templates:
-
-        jel.SetTemplate(<templateName>, <JelTemplate>)
-            templateName - string containing the template name to set / change; common tag names can be used - this will change / append to their functions when created by jel
-            JelTemplate - can be string or {} or [] or function
-                string - HTML element tag
-                {} - <JelElementInitializationObject>
-                [] - array of <JelElementInitializationObjects>
-                function - element creation function: function (<elParent>, <templateName>) {} : HTMLElement
-                    elParent - parent HTMLElement
-                    templateName - used template name
-
-
-    Examples:
-        jel("div");
-        jel({a:{href="#"}}, "I'm just a link")
-        someform.jel("input", {type: "password"});
-        jel.SetTemplate("label", {label: {style: "color: red;"}});
-        ...
 */
 
 // TODO:
@@ -78,10 +17,6 @@
 // Упаковка связанных переменных в массивы
 // Добавление именованных шаблонов элементов
 // Инициализация из массива с последующим рядом аргументов и возвратом массива ссылок созданных элементов
-// Задание классов как массива
-// Добавление классов и стилей при расширении шаблона
-// Слияние массивов классов и массивов / объектов стилей при расширении шаблона и обычной инициализации
-// Возможность использовать функции как аргументы инициализации для атрибутов / значений объектов стилей (в функцию передается текущее значение атрибута / значения объекта стилей)
 
 // UniBase - глобальная база данных json - концепция
 
@@ -106,9 +41,41 @@ jel.SetTemplate = function (strTemplateName, jelTemplate) {
 
 HTMLElement.prototype.jel = function() {
 
-    function jelSetStyle(el, style) {
-        for (var s in style)
-            el.style[s] = style[s];
+    function jelSetStyle(el, oStyle) {
+        if (Array.isArray(oStyle))
+        for (var o in oStyle)
+            jelSetStyle(el, oStyle[o]);
+        else {
+            if (typeof oStyle == "function")
+                jelSetStyle(el, oStyle.call(el, el, el.style));
+            else
+            for (var o in oStyle) {
+                var newStyleProp;
+                if (typeof oStyle[o] == "function")
+                    newStyleProp = oStyle[o].call(el, el, el.style[o]);
+                else
+                    newStyleProp = oStyle[o];
+                if (typeof el.style[o] != "string" ||
+                    el.style[o].search("!important") == -1 || 
+                    typeof newStyleProp == "string" && newStyleProp.search("!important") != -1)
+                        el.style[o] = newStyleProp;
+            }
+        }
+    }
+    
+    function jelSetClass(el, oClass) {
+        var strClass = el.class;
+        if (Array.isArray(oClass)) {
+            for (o in oClass)
+                jelSetClass(el, oClass[o]);
+        } else {
+            if (typeof oClass == "function")
+                strClass = strClass + " " + oClass.call(el, el, strClass.trim());
+            else
+                strClass = strClass + " " + oClass;
+        }
+
+        el.class = strClass.trim();
     }
     
     function jelAddHTML(el, strHTML) {
@@ -153,61 +120,74 @@ HTMLElement.prototype.jel = function() {
 
     function jelSetAttributes(el, attributes, appliedTemplatesAttr) {
         for (var a in attributes)
-        if (typeof attributes[a] == "string")
-        switch (a) {
-            case "innerHTML":
-                jelAddHTML(el, attributes[a]);
-                break;
-            default:
-                el.setAttribute(a, attributes[a]);
-        } else 
-        if (typeof attributes[a] == "object")
-        switch (a) {
-            case "style":
-                jelSetStyle(el, attributes[a]);
-                break;
-            case "children":
-                if (Array.isArray(attributes[a]))
-                for (var c in attributes[a])
-                switch (typeof attributes[a][c]) {
-                    case "object":
-                        el.jel(attributes[a][c], {_appliedTemplates: appliedTemplatesAttr});
-                        break;
-                    case "string":
-                        // var text = document.createTextNode("");
-                        jelAddHTML(el, attributes[a][c]);
-                        break;
-                    case "function":
-                        attributes[a][c].call(el, el);
-                        break;
-                    default:
-                }
-                break;
-            case "jel":
-                for (var c in attributes[a])
-                switch (c) {
-                    case "name":
-                        if (el.jelEx._namedParent !== el) {
-                            el.jelEx._namedParent[attributes[a][c]] = el;
-                            el.jelEx._namedParentForChildren = el;
-                        }
-                        break;
-                    case "root":
-                        el.jelEx._componentRoot = el;
-                        break;
-                    case "links":
-                        if (typeof attributes[a][c] != "object")
+        switch (typeof attributes[a]) {
+        case "string":
+            switch (a) {
+                case "innerHTML":
+                    jelAddHTML(el, attributes[a]);
+                    break;
+                case "style":
+                case "class":
+                    el.setAttribute(a, el.getAttribute(a) + " " + attributes[a]);
+                    break;
+                default:
+                    el.setAttribute(a, attributes[a]);
+            }
+            break;
+        case "object":
+            switch (a) {
+                case "style":
+                    jelSetStyle(el, attributes[a]);
+                    break;
+                case "class":
+                    jelSetClass(el, attributes[a]);
+                    break;
+                case "children":
+                    if (Array.isArray(attributes[a]))
+                    for (var c in attributes[a])
+                    switch (typeof attributes[a][c]) {
+                        case "object":
+                            el.jel(attributes[a][c], {_appliedTemplates: appliedTemplatesAttr});
                             break;
-                        for (var p in attributes[a][c])
-                            el.jelEx.AddPropertyLink(p, attributes[a][c][p]);
-                        break;
-                    default:
-                }
-                break;
-            default:
-        } else 
-        if (typeof attributes[a] == "function") {
-            attributes[a][c].call(el, el);
+                        case "string":
+                            // var text = document.createTextNode("");
+                            jelAddHTML(el, attributes[a][c]);
+                            break;
+                        case "function":
+                            attributes[a][c].call(el, el);
+                            break;
+                        default:
+                    }
+                    break;
+                case "jel":
+                    for (var c in attributes[a])
+                    switch (c) {
+                        case "name":
+                            if (el.jelEx._namedParent !== el) {
+                                el.jelEx._namedParent[attributes[a][c]] = el;
+                                el.jelEx._namedParentForChildren = el;
+                            }
+                            break;
+                        case "root":
+                            el.jelEx._componentRoot = el;
+                            break;
+                        case "links":
+                            if (typeof attributes[a][c] != "object")
+                                break;
+                            for (var p in attributes[a][c])
+                                el.jelEx.AddPropertyLink(p, attributes[a][c][p]);
+                            break;
+                        default:
+                    }
+                    break;
+                default:
+            }
+            break;
+        case "function":
+            el.setAttribute(a, attributes[a].call(el, el, el.getAttribute(a)));
+            break;
+        default:
+            el.setAttribute(a, attributes[a]);
         }
     }
     

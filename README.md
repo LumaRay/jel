@@ -37,9 +37,20 @@ This library should help move from explicit HTML markup to javascript objects co
         JelElementAttributesAndJelProperties: {<param0>: <val0>[, <param1>: <val1>[, ...]]}
                 param - element's attribute name or a special "jel" attribute name for <JelParameters>
                 val - element's attribute value or a special "jel" attribute name for <JelParameters>
-                    if <param> == "class", <val> can be string or []
-                    if <param> == "style", <val> can be string or {} or []
+                    if <param> == "class", element class sting will be appended with <val>,
+                    which can be string or [] or function (<el>, <curClassString>) {... return <addToClassString>}
+                        el - current created HTMLElement;
+                        if <val> is [], items in it can be strings or [] (then recursive) or function (<el>, <curClassString>) {... return <addToClassString>}
+                            addToClassString - class string to append to current class string
+                    if <param> == "style", element style will be appended with <val>, 
+                    which can be string or {} or [] or function (<el>, <curStyle>) {... return <addToStyle>}
+                        if <val> is {}, values in it can be function (<el>, <curStyleParam>) {... return <newStyleParam>}
+                        if <val> is [], items in it can be <addToStyle> or [] (then recursive) or function (<el>, <curStyle>) {... return <addToStyle>}
+                            addToStyle - key-value style object {}
+                    if <param> == "jel", <val> = <JelParameters>
                     else <val> should not be {} or []
+                        if <val> is function, then it should be: function(<el>, <oldAttr>){... return <newAttr>} 
+                            el - current created HTMLElement
         JelParameters: {<param0>: <val0>[, <param1>: <val1>[, ...]]}
             param - jel special parameter name
             val - jel special parameter value
