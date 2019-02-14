@@ -16,7 +16,6 @@
 // Именования адресатов в цепочных переменных
 // Верховный адресат в цепочных переменных
 // Установка именных свойств элемента
-// Упаковка цепочных переменных в массивы
 // Привязка для компонента верхнего уровня должна выполняться после привязки для компонентов нижнего уровня
 
 // UniBase - глобальная база данных json - концепция
@@ -171,7 +170,7 @@ HTMLElement.prototype.jel = function() {
                     var tmpAttr = el.getAttribute(a);
                     if (tmpAttr === null)
                         tmpAttr = "";
-                    el.setAttribute(a, tmpAttr + " " + attributes[a]);
+                    el.setAttribute(a, (tmpAttr + " " + attributes[a]).trim());
                     break;
                 default:
                     el.setAttribute(a, attributes[a]);
@@ -201,6 +200,10 @@ HTMLElement.prototype.jel = function() {
                             break;
                         default:
                     }
+                    break;
+                case "properties":
+                    for (var p in attributes[a])
+                        el[p] = attributes[a][p];
                     break;
                 case "jel":
                     for (var c in attributes[a])

@@ -51,10 +51,13 @@ This library should help move from explicit HTML markup to javascript objects co
                         if <val> is {}, values in it can be function (<el>, <curStyleParam>) {... return <newStyleParam>}
                         if <val> is [], items in it can be <addToStyle> or [] (then recursive) or function (<el>, <curStyle>) {... return <addToStyle>}
                             addToStyle - key-value style object {}
+                    if <param> == "children", <val> - array [] of <JelElementInitializationObjects>
+                    if <param> == "properties", <val> = <Properties>
                     if <param> == "jel", <val> = <JelParameters>
                     else <val> should not be {} or []
                         if <val> is function, then it should be: function(<el>, <oldAttr>){... return <newAttr>} 
                             el - current created HTMLElement
+        Properties: {<prop0>: <val0>[, <prop1>: <val1>[, ...]]} - set additional properties (<prop>) to values (<val>) for currently created element
         JelParameters: {<param0>: <val0>[, <param1>: <val1>[, ...]]}
             param - jel special parameter name
             val - jel special parameter value
@@ -178,12 +181,12 @@ This library should help move from explicit HTML markup to javascript objects co
             children: [
                 {div: {id: "testid2", class: "testcl", name: "testname2", 
                     style: "width: 50px; height: 50px; background: green;", 
-                    jel:{orders: {"master.SetBackgroundColor": "style.backgroundColor"}}}},
+                    jel: {orders: {"master.SetBackgroundColor": "style.backgroundColor"}}}},
                 "Bla <b>bla</b>",
                 {div: {
                     id: "testid3", class: "testcl", name: "testname3", 
                     style: {width: "30px", height: "30px", background: "blue"}, 
-                    jel:{name: "tn2", links: {
+                    jel: {name: "tn2", links: {
                         "root.testWidth": "style.width",
                         "root.testEventListener": "addEventListener",
                         "root.testOnClick": "onclick",
@@ -200,6 +203,9 @@ This library should help move from explicit HTML markup to javascript objects co
             jel: {
                 name: "topName",
                 root: ""
+            },
+            properties: {
+                align: "right"
             }
         }}, 
         "Test <i>1111</i>", 
@@ -219,6 +225,8 @@ This library should help move from explicit HTML markup to javascript objects co
     elTest.testEventListener("click",function(e){console.log(e.target);});
 
     elTest.testOnClick = function(){elTest.SetBackgroundColor("pink")};
+
+    elTest.testBackgroundColor = "grey";
 
     jel("div",{children: [
         {div:{children: [
