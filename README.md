@@ -61,12 +61,22 @@ This library should help move from explicit HTML markup to javascript objects co
                 if <param> == "name", <val> - subelement special jel string name for a separate jel elements' naming tree
                 if <param> == "root", <val> - indicates that this is a component root element, should be empty string ""
                 if <param> == "links", <val> = <JelElementPropertyLinks>
+                if <param> == "orders", <val> = <JelElementPropertyOrders>
         JelElementPropertyLinks: {<target0>: <local0>[, <target1>: <local1>[, ...]]} - link properties of a child element to one of it's parent elements
             target: "<targetElementType>.<targetElementCustomProperty0>[.<targetElementCustomProperty1>[.<targetElementCustomProperty2[...]>]]"
                 targetElementType:
                     if <targetElementType> == "root", the link is created for a closest parent element marked as jel:{root:""}
                     if <targetElementType> == "master", the link is created for a closest parent element marked as jel:{name:"..."}
                 targetElementCustomProperty<n> - custom property (sub)name for the selected parent element
+            local: "<localElementCustomProperty0>[.<localElementCustomProperty1>[.<localElementCustomProperty2[...]>]]"
+                localElementCustomProperty<n> - property (sub)name for current created element
+        JelElementPropertyOrders: {<target0>: <local0>[, <target1>: <local1>[, ...]]} - adds a function (<newPropValue>){} to a target 
+        that changes properties of added local elements at once
+            target: "<targetElementType>.<targetElementCustomProperty0>[.<targetElementCustomProperty1>[.<targetElementCustomProperty2[...]>]]"
+                targetElementType:
+                    if <targetElementType> == "root", the order is added for a closest parent element marked as jel:{root:""}
+                    if <targetElementType> == "master", the order is added for a closest parent element marked as jel:{name:"..."}
+                targetElementCustomProperty<n> - custom function (sub)name for the selected parent element
             local: "<localElementCustomProperty0>[.<localElementCustomProperty1>[.<localElementCustomProperty2[...]>]]"
                 localElementCustomProperty<n> - property (sub)name for current created element
          
@@ -166,7 +176,9 @@ This library should help move from explicit HTML markup to javascript objects co
             class: "testcl",
             name: "testname",
             children: [
-                {div: {id: "testid2", class: "testcl", name: "testname2", style: "width: 50px; height: 50px; background: green;"}},
+                {div: {id: "testid2", class: "testcl", name: "testname2", 
+                    style: "width: 50px; height: 50px; background: green;", 
+                    jel:{orders: {"master.SetBackgroundColor": "style.backgroundColor"}}}},
                 "Bla <b>bla</b>",
                 {div: {
                     id: "testid3", class: "testcl", name: "testname3", 
@@ -176,6 +188,8 @@ This library should help move from explicit HTML markup to javascript objects co
                         "root.testEventListener": "addEventListener",
                         "root.testOnClick": "onclick",
                         "master.testBackgroundColor": "style.backgroundColor"
+                    }, orders: {
+                        "master.SetBackgroundColor": "style.backgroundColor"
                     }}
                 }},
                 "Yeee ",
@@ -204,7 +218,7 @@ This library should help move from explicit HTML markup to javascript objects co
 
     elTest.testEventListener("click",function(e){console.log(e.target);});
 
-    elTest.testOnClick = function(){alert(1);};
+    elTest.testOnClick = function(){elTest.SetBackgroundColor("pink")};
 
     jel("div",{children: [
         {div:{children: [

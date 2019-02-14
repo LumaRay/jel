@@ -18,7 +18,6 @@
 // Установка именных свойств элемента
 // Упаковка цепочных переменных в массивы
 // Привязка для компонента верхнего уровня должна выполняться после привязки для компонентов нижнего уровня
-// Упаковка связанных переменных в массивы
 
 // UniBase - глобальная база данных json - концепция
 
@@ -36,9 +35,8 @@ jel.SetTemplate = function (strTemplateName, jelTemplate) {
     (typeof jelTemplate == "function" || typeof jelTemplate == "object" || typeof jelTemplate == "string")) {
         this._templates[strTemplateName] = jelTemplate;
         return this;
-    } else {
+    } else
         return undefined;
-    }
 }
 
 HTMLElement.prototype.jel = function() {
@@ -122,6 +120,43 @@ HTMLElement.prototype.jel = function() {
         })(arTargetProp, iterTarget, arLocalProp, iterLocal);
     }
 
+    function jelAddPropertyOrder(strTarget, strLocal) {
+        var el = this._ownerElement;
+        var arTargetProp = strTarget.split(".");
+        var arLocalProp = strLocal.split(".");
+        var iterTarget = el.jelEx._namedParent;
+        if (arTargetProp[0] === "root")
+            iterTarget = el.jelEx._componentRoot;
+        for (var tp = 1; tp < arTargetProp.length - 1; tp++) {
+            if (typeof iterTarget[arTargetProp[tp]] == "undefined")
+                iterTarget[arTargetProp[tp]] = {};
+            iterTarget = iterTarget[arTargetProp[tp]];
+        }
+        var iterLocal = el;
+        for (var lp = 0; lp < arLocalProp.length - 1; lp++) {
+            if (typeof iterLocal[arLocalProp[lp]] == "undefined")
+                throw "Invalid local property";
+            iterLocal = iterLocal[arLocalProp[lp]];
+        }
+        (function(arTargetProp, iterTarget, arLocalProp, iterLocal) {
+            if (typeof iterTarget[arTargetProp[arTargetProp.length - 1]] == "undefined") {
+                iterTarget[arTargetProp[arTargetProp.length - 1]] = function (newValue) {
+                    for (var p in iterTarget[arTargetProp[arTargetProp.length - 1]]._orders)
+                        iterTarget[arTargetProp[arTargetProp.length - 1]]._orders[p]
+                        .localPropParent[
+                            iterTarget[arTargetProp[arTargetProp.length - 1]]._orders[p]
+                            .localPropName
+                        ] = newValue;
+                };
+                iterTarget[arTargetProp[arTargetProp.length - 1]]._orders = [];
+            }
+            iterTarget[arTargetProp[arTargetProp.length - 1]]._orders.push({
+                localPropParent: iterLocal,
+                localPropName: arLocalProp[arLocalProp.length - 1]
+            });
+        })(arTargetProp, iterTarget, arLocalProp, iterLocal);
+    }
+
     function jelSetAttributes(el, attributes, appliedTemplatesAttr) {
         for (var a in attributes)
         if (a != "_appliedTemplates")
@@ -184,6 +219,12 @@ HTMLElement.prototype.jel = function() {
                                 break;
                             for (var p in attributes[a][c])
                                 el.jelEx.AddPropertyLink(p, attributes[a][c][p]);
+                            break;
+                        case "orders":
+                            if (typeof attributes[a][c] != "object")
+                                break;
+                            for (var p in attributes[a][c])
+                                el.jelEx.AddPropertyOrder(p, attributes[a][c][p]);
                             break;
                         default:
                     }
@@ -279,6 +320,7 @@ HTMLElement.prototype.jel = function() {
     el.jelEx._componentRoot = el;
     el.jelEx._topComponentRoot = el;
     el.jelEx.AddPropertyLink = jelAddPropertyLink;
+    el.jelEx.AddPropertyOrder = jelAddPropertyOrder;
     // el.jelEx._appliedTemplates = {};
 
     if (this.jelEx !== undefined) {
