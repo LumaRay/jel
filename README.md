@@ -4,7 +4,7 @@
 
 *A vanilla javascript DOM elements creation and management helper library*
 
-Simply turn all `<h1>that stuff</h1>` into `jel("h1", "this one")`
+Simply turn all `<h1>that stuff</h1>` into `jel({h1: {"this one"}})` - but this is just a beginning!
 
 This library should help move from explicit HTML markup to javascript objects coding. Just retrieve JSON elements' init objects from a server or initialize them yourself, then convert them into common javascript objects and use with **jel** function (or add as templates for a later use).
 
@@ -13,9 +13,9 @@ This library should help move from explicit HTML markup to javascript objects co
     2019
     MIT License
 
-#### Usage:
+### Usage:
 
-###### HTML Elements creation and appending:
+##### HTML Elements creation and appending:
 
     [<parentHTMLElement>.]jel(<arguments>) : HTMLElement - creates a DOM subtree and adds it to parentHTMLElement 
     (document.body by default)
@@ -56,7 +56,7 @@ This library should help move from explicit HTML markup to javascript objects co
                 localElementCustomProperty<n> - property (sub)name for current created element
          
                 
-###### Using Templates:
+##### Using Templates:
 
     jel.SetTemplate(<templateName>, <JelTemplate>)
         templateName - string containing the template name to set / change;
@@ -71,7 +71,7 @@ This library should help move from explicit HTML markup to javascript objects co
                 templateName - used template name
 
 
-#### Examples:
+### Examples:
 
     jel("div");
 
@@ -192,8 +192,8 @@ This library should help move from explicit HTML markup to javascript objects co
     elTest.testOnClick = function(){alert(1);};
 
     jel("div",{children: [
-        {dev:{children: [
-            {dev:{}},
+        {div:{children: [
+            {div:{}},
             el => {window.ttt = el;}
         ]}},
         "test!"
