@@ -1,10 +1,14 @@
 /* 
     jel: Javascript Elements
     Version: 0.1
-    A vanilla javascript DOM elements creation and management library
+    A vanilla javascript DOM elements creation and management helper library
     Created by: Yury Laykov / Russia, Zelenograd
     2019
     MIT License
+    No additional libraries required.
+    Can be used with other libraries.
+    Works on older browsers (ES6 not necessary).
+    The product is distributed "AS IS", without any warranties and liabilities.
 */
 
 // TODO:
@@ -15,8 +19,6 @@
 // Упаковка цепочных переменных в массивы
 // Привязка для компонента верхнего уровня должна выполняться после привязки для компонентов нижнего уровня
 // Упаковка связанных переменных в массивы
-// Добавление именованных шаблонов элементов
-// Инициализация из массива с последующим рядом аргументов и возвратом массива ссылок созданных элементов
 
 // UniBase - глобальная база данных json - концепция
 
@@ -65,6 +67,8 @@ HTMLElement.prototype.jel = function() {
     
     function jelSetClass(el, oClass) {
         var strClass = el.class;
+        if (strClass === null)
+            strClass = "";
         if (Array.isArray(oClass)) {
             for (o in oClass)
                 jelSetClass(el, oClass[o]);
@@ -120,6 +124,7 @@ HTMLElement.prototype.jel = function() {
 
     function jelSetAttributes(el, attributes, appliedTemplatesAttr) {
         for (var a in attributes)
+        if (a != "_appliedTemplates")
         switch (typeof attributes[a]) {
         case "string":
             switch (a) {
@@ -128,7 +133,10 @@ HTMLElement.prototype.jel = function() {
                     break;
                 case "style":
                 case "class":
-                    el.setAttribute(a, el.getAttribute(a) + " " + attributes[a]);
+                    var tmpAttr = el.getAttribute(a);
+                    if (tmpAttr === null)
+                        tmpAttr = "";
+                    el.setAttribute(a, tmpAttr + " " + attributes[a]);
                     break;
                 default:
                     el.setAttribute(a, attributes[a]);
@@ -193,7 +201,7 @@ HTMLElement.prototype.jel = function() {
     
     function jelSoftClone(oSrc) {
         var oTrg = {};
-        for (o in oSrc)
+        for (var o in oSrc)
             oTrg[o] = oSrc[o];
         return oTrg;
     }
@@ -203,11 +211,15 @@ HTMLElement.prototype.jel = function() {
 
     var appliedTemplatesAttr = typeof arguments[arguments.length - 1] == "object" && typeof arguments[arguments.length - 1]._appliedTemplates != "undefined" ? jelSoftClone(arguments[arguments.length - 1]._appliedTemplates) : undefined;
 
-    if ((typeof arguments[0] == "object" && Array.isArray(arguments[0])) && 
-        (arguments.length === 1 || arguments.length === 2 && typeof appliedTemplatesAttr !== undefined )) {
+    // if ((typeof arguments[0] == "object" && Array.isArray(arguments[0])) && 
+    //     (arguments.length === 1 || arguments.length === 2 && typeof appliedTemplatesAttr !== undefined )) {
+    if (typeof arguments[0] == "object" && Array.isArray(arguments[0])) {
         var arrEls = [];
         for (var o in arguments[0]) {
-            var newEl = this.jel(arguments[0][o], {_appliedTemplates: appliedTemplatesAttr});
+            // var newEl = this.jel(arguments[0][o], {_appliedTemplates: appliedTemplatesAttr});
+            var newArgs = arguments[0].slice(0);
+            newArgs[0] = arguments[0][o];
+            var newEl = this.jel.apply(this, newArgs);
             if (newEl != "undefined")
                 arrEls.push(newEl);
         }

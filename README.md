@@ -12,6 +12,10 @@ This library should help move from explicit HTML markup to javascript objects co
     Created by: Yury Laykov / Russia, Zelenograd
     2019
     MIT License
+    No additional libraries required.
+    Can be used with other libraries.
+    Works on older browsers (ES6 not necessary).
+    The product is distributed "AS IS", without any warranties and liabilities.
 
 ### Usage:
 
