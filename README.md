@@ -2,7 +2,11 @@
 
 ### jel : Javascript Elements
 
-*A vanilla javascript DOM elements creation and management library*
+*A vanilla javascript DOM elements creation and management helper library*
+
+Simply turn all `<h1>that stuff</h1>` into `jel("h1", "this one")`
+
+This library should help move from explicit HTML markup to javascript objects coding. Just retrieve JSON elements' init objects from a server or initialize them yourself, then convert them into common javascript objects and use with **jel** function (or add as templates for a later use).
 
     Version: 0.1
     Created by: Yury Laykov / Russia, Zelenograd
@@ -70,24 +74,18 @@
 #### Examples:
 
     jel("div");
-    jel({a:{href="#"}}, "I'm just a link")
+
+    jel({a:{href="#"}}, "I'm just a link");
+
     someform.jel("input", {type: "password"});
+
     jel.SetTemplate("label", {label: {style: "color: red;"}});
-    ...
-
-
-#### A ton more examples:
-
     
-    jel.SetTemplate("label", {label: {style: "color: red;"}});
-
     document.head.jel("meta");
 
     document.getElementsByTagName("html")[0].jel("head2");
 
     document.head.parentElement.jel("body2");
-
-    jel("div");
 
     jel("div", {
         "id": "testid",
@@ -254,7 +252,6 @@
             this.jel({input: {type: "submit", value: strSubmitTitle}});
         });
     }
-
 
 
     var formData = [
