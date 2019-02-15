@@ -207,8 +207,10 @@ HTMLElement.prototype.jel = function() {
                         var arLocalProp = p.split(".");
                         var iterLocal = el;
                         for (var lp = 0; lp < arLocalProp.length - 1; lp++) {
-                            if (typeof iterLocal[arLocalProp[lp]] == "undefined")
-                                throw "Invalid local property";
+                            if (typeof iterLocal[arLocalProp[lp]] == "undefined") {
+                                iterLocal[arLocalProp[lp]] = {};
+                                // throw "Invalid local property";
+                            }
                             iterLocal = iterLocal[arLocalProp[lp]];
                         }
                         iterLocal[arLocalProp[arLocalProp.length - 1]] = attributes[a][p];
