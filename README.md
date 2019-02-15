@@ -58,6 +58,8 @@ This library should help move from explicit HTML markup to javascript objects co
                         if <val> is function, then it should be: function(<el>, <oldAttr>){... return <newAttr>} 
                             el - current created HTMLElement
         Properties: {<prop0>: <val0>[, <prop1>: <val1>[, ...]]} - set additional properties (<prop>) to values (<val>) for currently created element
+            prop: "<localElementProperty0>[.<localElementProperty1>[.<localElementProperty2[...]>]]"
+                localElementProperty<n> - property (sub)name for current created element
         JelParameters: {<param0>: <val0>[, <param1>: <val1>[, ...]]}
             param - jel special parameter name
             val - jel special parameter value
@@ -71,17 +73,17 @@ This library should help move from explicit HTML markup to javascript objects co
                     if <targetElementType> == "root", the link is created for a closest parent element marked as jel:{root:""}
                     if <targetElementType> == "master", the link is created for a closest parent element marked as jel:{name:"..."}
                 targetElementCustomProperty<n> - custom property (sub)name for the selected parent element
-            local: "<localElementCustomProperty0>[.<localElementCustomProperty1>[.<localElementCustomProperty2[...]>]]"
-                localElementCustomProperty<n> - property (sub)name for current created element
-        JelElementPropertyOrders: {<target0>: <local0>[, <target1>: <local1>[, ...]]} - adds a function (<newPropValue>){} to a target 
+            local: "<localElementProperty0>[.<localElementProperty1>[.<localElementProperty2[...]>]]"
+                localElementProperty<n> - property (sub)name for current created element
+        JelElementPropertyOrders: {<target0>: <local0>[, <target1>: <local1>[, ...]]} - adds a function  (<newPropValue>){} : Object  to a target 
         that changes properties of added local elements at once
             target: "<targetElementType>.<targetElementCustomProperty0>[.<targetElementCustomProperty1>[.<targetElementCustomProperty2[...]>]]"
                 targetElementType:
                     if <targetElementType> == "root", the order is added for a closest parent element marked as jel:{root:""}
                     if <targetElementType> == "master", the order is added for a closest parent element marked as jel:{name:"..."}
                 targetElementCustomProperty<n> - custom function (sub)name for the selected parent element
-            local: "<localElementCustomProperty0>[.<localElementCustomProperty1>[.<localElementCustomProperty2[...]>]]"
-                localElementCustomProperty<n> - property (sub)name for current created element
+            local: "<localElementProperty0>[.<localElementProperty1>[.<localElementProperty2[...]>]]"
+                localElementProperty<n> - property (sub)name for current created element
          
                 
 ##### Using Templates:
@@ -307,3 +309,49 @@ And / or you can see the results of running the examples and play with the libra
     ];
 
     addForm(document.body, formData, "Save");
+
+
+    jel("h1", {
+        style:{color:"green"},
+        innerHTML:"Welcome to jel sandbox!"
+    });
+
+    jel("a", {href:"https://github.com/LumaRay/jel", target:"_blank"})
+        .jel("h2", 
+            {style:{"font-style":"italic"}},
+            "Code your pages with pure javascript.");
+
+    document.head.jel(
+        {style:{type:"text/css"}}, 
+        ".wow{text-decoration:underline;}");
+
+    jel({ul:{children:[
+        {li:{class:"wow", children:["Easy use with JSON"]}},
+        {li:{children:["Vanilla <i>javascript</i>"]}},
+        {li:{children:["Templates"]}},
+        {li:{children:["Linked properties"]}}
+    ]}}, [
+        jel({li:{children:[
+            {a:{href:"https://github.com/LumaRay/jel#usage",
+                target:"_blank",
+                properties:{innerText:"And more"}}}
+            ]}})
+    ]);
+
+    jel.SetTemplate("sample text template name", {div:{children:[
+        "In case you have ",
+        {i:{children:["a mixed text content"]}},
+        ", it is still possible ",
+        {b:{children:["to list them as child elements"]}},
+        " or <u>use markup inside your text.</u>"
+    ]}});
+
+    jel({"sample text template name":{style:{"font-size":"14pt"}}}, function(el){
+        this.jel(["br", "br"]);
+    });
+
+    jel({a:{
+        style:"font-size: 16pt", 
+        target:"_blank",
+        href:"https://github.com/LumaRay/jel#examples"
+    }}, "Try other examples!");

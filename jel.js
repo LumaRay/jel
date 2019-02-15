@@ -146,6 +146,7 @@ HTMLElement.prototype.jel = function() {
                             iterTarget[arTargetProp[arTargetProp.length - 1]]._orders[p]
                             .localPropName
                         ] = newValue;
+                    return iterTarget;
                 };
                 iterTarget[arTargetProp[arTargetProp.length - 1]]._orders = [];
             }
@@ -202,8 +203,17 @@ HTMLElement.prototype.jel = function() {
                     }
                     break;
                 case "properties":
-                    for (var p in attributes[a])
-                        el[p] = attributes[a][p];
+                    for (var p in attributes[a]) {
+                        var arLocalProp = p.split(".");
+                        var iterLocal = el;
+                        for (var lp = 0; lp < arLocalProp.length - 1; lp++) {
+                            if (typeof iterLocal[arLocalProp[lp]] == "undefined")
+                                throw "Invalid local property";
+                            iterLocal = iterLocal[arLocalProp[lp]];
+                        }
+                        iterLocal[arLocalProp[arLocalProp.length - 1]] = attributes[a][p];
+                        // el[p] = attributes[a][p];
+                    }
                     break;
                 case "jel":
                     for (var c in attributes[a])
