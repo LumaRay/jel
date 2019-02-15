@@ -8,7 +8,6 @@ Simply turn all `<h1>that stuff</h1>` into `jel("h1": "this one")` - [but this i
 
 This library should help move from explicit HTML markup to javascript objects coding. Just retrieve JSON elements' init objects from a server or initialize them yourself, then convert them into common javascript objects and use with **jel** function (or add as templates for a later use).
 
-    Version: 0.1
     Created by: Yury Laykov / Russia, Zelenograd
     2019
     MIT License
