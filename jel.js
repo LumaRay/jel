@@ -122,10 +122,15 @@ HTMLElement.prototype.jel = function() {
         })(arTargetProp, iterTarget, arLocalProp, iterLocal);
     }
 
-    function jelAddPropertyOrder(strTarget, strLocal) {
+    function jelAddPropertyOrder(strTarget, oLocal) {
+        if ((typeof oLocal == "object") && Array.isArray(oLocal)) {
+            for (var l in oLocal)
+                jelAddPropertyOrder.call(this, strTarget, oLocal[l]);
+            return;
+        }
         var el = this._ownerElement;
         var arTargetProp = strTarget.split(".");
-        var arLocalProp = strLocal.split(".");
+        var arLocalProp = oLocal.split(".");
         var iterTarget = el.jelEx._namedParent;
         if (arTargetProp[0] === "root")
             iterTarget = el.jelEx._componentRoot;
