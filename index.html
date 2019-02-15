@@ -36,11 +36,11 @@
                 this.jel("h2");
                 this.jel("h3");
             });
-            jel("div", el => {
-                el.jel("h1");
-                el.jel("h2");
-                el.jel("h3");
-            });
+            // jel("div", el => {
+            //     el.jel("h1");
+            //     el.jel("h2");
+            //     el.jel("h3");
+            // });
             jel("div", [
                 jel("h1"),
                 jel("h2"),
@@ -118,13 +118,13 @@
             elTest.testOnClick = function(){elTest.SetBackgroundColor("pink")};
             elTest.testBackgroundColor = "grey";
 
-            jel("div",{children: [
-                {dev:{children: [
-                    {dev:{}},
-                    el => {window.ttt = el;}
-                ]}},
-                "test!"
-            ]});
+            // jel("div",{children: [
+            //     {dev:{children: [
+            //         {dev:{}},
+            //         el => {window.ttt = el;}
+            //     ]}},
+            //     "test!"
+            // ]});
 
             jel({form: {action: "", method: "post", children: [
                 {label: {for: "FullName", children: ["Full Name"]}}, {br:{}},
