@@ -38,6 +38,10 @@ jel.SetTemplate = function (strTemplateName, jelTemplate) {
         return undefined;
 }
 
+jel.GetTemplate = function (strTemplateName) {
+    return this._templates[strTemplateName];
+}
+
 HTMLElement.prototype.jel = function() {
 
     function jelSetStyle(el, oStyle) {

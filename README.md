@@ -100,6 +100,8 @@ This library should help move from explicit HTML markup to javascript objects co
                 templateName - used template name
     Templates can be applied as regular elements creation using jel function. 
     Using additional jel arguments will append to the created template instance.
+    
+    jel.GetTemplate(<templateName>) - returns template as a string or {} or [] or function or undefined if not exists
 
 
 ### Examples 
