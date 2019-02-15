@@ -99,7 +99,11 @@ This library should help move from explicit HTML markup to javascript objects co
                 templateName - used template name
 
 
-### Examples:
+### Examples 
+
+You can test the lib [in this sandbox](https://codepen.io/lumaray/pen/VgEMpg).
+
+And / or you can see the results of running the examples and play with the library in your browser's console [on GitHub page](https://lumaray.github.io/jel/)
 
     jel("div");
 
