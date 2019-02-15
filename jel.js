@@ -11,8 +11,6 @@
     The product is distributed "AS IS", without any warranties and liabilities.
 */
 
-// UniBase - глобальная база данных json - концепция
-
 function jel() {
     var elParent = (this === window) ? document.body : this;
     return elParent.jel.apply(elParent, arguments);
