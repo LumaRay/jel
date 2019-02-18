@@ -13,7 +13,7 @@ This library should help move from explicit HTML markup to javascript objects co
     MIT License
     No additional libraries required.
     Can be used with other libraries.
-    Works on older browsers (ES6 not necessary).
+    Works on older browsers (ES5).
     The product is distributed "AS IS", without any warranties and liabilities.
 
 ### Usage:
