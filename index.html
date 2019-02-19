@@ -13,6 +13,16 @@
 
             jel.SetTemplate("label", {label: {style: "color: red;"}});
 
+            jel([
+                {p:"Hello John Doe."},
+                {p:"Here is what I know about you:"},
+                {ul:[
+                    {li:"you code fast;"},
+                    {li:"you are so smart;"},
+                    {li:"you are the top cited man!"}
+                ]},
+                "hr"
+            ]);
             document.head.jel("meta");
             document.getElementsByTagName("html")[0].jel("head2");
             document.head.parentElement.jel("body2");

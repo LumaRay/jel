@@ -128,6 +128,17 @@ You can test the lib [in this sandbox](https://codepen.io/lumaray/pen/VgEMpg).
 
 And / or you can see the results of running the examples and play with the library in your browser's console [on GitHub page](https://lumaray.github.io/jel/)
 
+    jel([
+        {p:"Hello John Doe."},
+        {p:"Here is what I know about you:"},
+        {ul:[
+            {li:"you code fast;"},
+            {li:"you are so smart;"},
+            {li:"you are the top cited man!"}
+        ]},
+        "hr"
+    ]);
+
     jel("div");
 
     jel({a:{href="#"}}, "I'm just a link");
