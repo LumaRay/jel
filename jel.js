@@ -1,13 +1,13 @@
 /* 
     jel: Javascript Elements
-    Version: 0.1.1
+    Version: 0.1.2
     A vanilla javascript DOM elements creation and management helper library
     Created by: Yury Laykov / Russia, Zelenograd
     2019
     MIT License
     No additional libraries required.
     Can be used with other libraries.
-    Works on older browsers (ES6 not necessary).
+    Works on older browsers (ES5).
     The product is distributed "AS IS", without any warranties and liabilities.
 */
 
@@ -164,6 +164,7 @@ HTMLElement.prototype.jel = function() {
         case "string":
             switch (a) {
                 case "innerHTML":
+                case "html":
                     jelAddHTML(el, attributes[a]);
                     break;
                 case "style":
@@ -186,6 +187,7 @@ HTMLElement.prototype.jel = function() {
                     jelSetClass(el, attributes[a]);
                     break;
                 case "children":
+                case "chi":
                     if (Array.isArray(attributes[a]))
                     for (var c in attributes[a])
                     switch (typeof attributes[a][c]) {
@@ -203,6 +205,7 @@ HTMLElement.prototype.jel = function() {
                     }
                     break;
                 case "properties":
+                case "prop":
                     for (var p in attributes[a]) {
                         var arLocalProp = p.split(".");
                         var iterLocal = el;
