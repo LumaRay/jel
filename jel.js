@@ -1,6 +1,6 @@
 /* 
     jel: Javascript Elements
-    Version: 0.1.3
+    Version: 0.1.4
     A vanilla javascript DOM elements creation and management helper library
     Created by: Yury Laykov / Russia, Zelenograd
     2019
@@ -277,7 +277,14 @@ HTMLElement.prototype.jel = function() {
         return oTrg;
     }
 
-
+    function jelSoftCloneArray(aSrc) {
+        var aDest = new Array(aSrc.length);
+        for(var i = 0; i < aDest.length; i++)
+            aDest[i] = aSrc[i];
+        return aDest;
+    }
+    
+    
     // --------------------------------------------------------------------
     // Startup code here
     // --------------------------------------------------------------------
@@ -295,7 +302,8 @@ HTMLElement.prototype.jel = function() {
         var arrEls = [];
         for (var o in arguments[0]) {
             // var newEl = this.jel(arguments[0][o], {_appliedTemplates: appliedTemplatesAttr});
-            var newArgs = arguments[0].slice(0);
+            // var newArgs = arguments.slice(0);
+            var newArgs = jelSoftCloneArray(arguments);
             newArgs[0] = arguments[0][o];
             var newEl = this.jel.apply(this, newArgs);
             if (newEl != "undefined")
