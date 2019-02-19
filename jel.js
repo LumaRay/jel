@@ -1,6 +1,6 @@
 /* 
     jel: Javascript Elements
-    Version: 0.1.2
+    Version: 0.1.3
     A vanilla javascript DOM elements creation and management helper library
     Created by: Yury Laykov / Russia, Zelenograd
     2019
@@ -277,10 +277,17 @@ HTMLElement.prototype.jel = function() {
         return oTrg;
     }
 
+
+    // --------------------------------------------------------------------
+    // Startup code here
+    // --------------------------------------------------------------------
+
     if (arguments.length === 0)
         return;
 
-    var appliedTemplatesAttr = typeof arguments[arguments.length - 1] == "object" && typeof arguments[arguments.length - 1]._appliedTemplates != "undefined" ? jelSoftClone(arguments[arguments.length - 1]._appliedTemplates) : undefined;
+    var appliedTemplatesAttr =  typeof arguments[arguments.length - 1] == "object" && 
+                                typeof arguments[arguments.length - 1]._appliedTemplates != "undefined" ? 
+                                jelSoftClone(arguments[arguments.length - 1]._appliedTemplates) : undefined;
 
     // if ((typeof arguments[0] == "object" && Array.isArray(arguments[0])) && 
     //     (arguments.length === 1 || arguments.length === 2 && typeof appliedTemplatesAttr !== undefined )) {
@@ -298,8 +305,8 @@ HTMLElement.prototype.jel = function() {
     }
 
     if (typeof arguments[0] == "object") {
-        if (Array.isArray(arguments[0]))
-            return undefined;
+        // if (Array.isArray(arguments[0]))
+            // return undefined;
 
         var tagName = undefined;
         var attrs = undefined;
@@ -331,7 +338,8 @@ HTMLElement.prototype.jel = function() {
 
     // var fromTemplate = typeof arguments[arguments.length - 1] == "boolean" ? arguments[arguments.length - 1] : false;
     // if (!fromTemplate && typeof jel._templates[arguments[0]] == "object") {
-    if (typeof jel._templates[arguments[0]] == "object" && (typeof appliedTemplatesAttr == "undefined" || appliedTemplatesAttr[arguments[0]] !== true)) {
+    if  (typeof jel._templates[arguments[0]] == "object" && 
+        (typeof appliedTemplatesAttr == "undefined" || appliedTemplatesAttr[arguments[0]] !== true)) {
         // if (Array.isArray(jel._templates[arguments[0]])) {
         //     this.jelEx.appliedTemplatesAttr[arguments[0]] = true;
         // }
