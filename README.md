@@ -50,8 +50,9 @@ This library should help move from explicit HTML markup to javascript objects co
                         if <val> is {}, values in it can be function (<el>, <curStyleParam>) {... return <newStyleParam>}
                         if <val> is [], items in it can be <addToStyle> or [] (then recursive) or function (<el>, <curStyle>) {... return <addToStyle>}
                             addToStyle - key-value style object {}
-                    if <param> == "children", <val> - array [] of <JelElementInitializationObjects>
-                    if <param> == "properties", <val> = <Properties>
+                    if <param> == "children" or <param> == "chi", <val> - array [] of <JelElementInitializationObjects>
+                    if <param> == "properties" or <param> == "prop", <val> = <Properties>
+                    if <param> == "innerHTML" or <param> == "html", <val> = html string to append to the element's inner content
                     if <param> == "jel", <val> = <JelParameters>
                     else <val> should not be {} or []
                         if <val> is function, then it should be: function(<el>, <oldAttr>){... return <newAttr>} 
