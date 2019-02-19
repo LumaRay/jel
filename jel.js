@@ -33,6 +33,16 @@ jel.GetTemplate = function (strTemplateName) {
     return this._templates[strTemplateName];
 }
 
+jel.mapKeywords = {
+    innerHTML: "innerHTML",
+    html: "html",
+    children: "children",
+    chi: "chi",
+    properties: "properties",
+    prop: "prop",
+    jel: "jel"
+}
+
 HTMLElement.prototype.jel = function() {
 
     function jelSetStyle(el, oStyle) {
@@ -163,8 +173,8 @@ HTMLElement.prototype.jel = function() {
         switch (typeof attributes[a]) {
         case "string":
             switch (a) {
-                case "innerHTML":
-                case "html":
+                case jel.mapKeywords.innerHTML:
+                case jel.mapKeywords.html:
                     jelAddHTML(el, attributes[a]);
                     break;
                 case "style":
@@ -186,8 +196,8 @@ HTMLElement.prototype.jel = function() {
                 case "class":
                     jelSetClass(el, attributes[a]);
                     break;
-                case "children":
-                case "chi":
+                case jel.mapKeywords.children:
+                case jel.mapKeywords.chi:
                     if (Array.isArray(attributes[a]))
                     for (var c in attributes[a])
                     switch (typeof attributes[a][c]) {
@@ -204,8 +214,8 @@ HTMLElement.prototype.jel = function() {
                         default:
                     }
                     break;
-                case "properties":
-                case "prop":
+                case jel.mapKeywords.properties:
+                case jel.mapKeywords.prop:
                     for (var p in attributes[a]) {
                         var arLocalProp = p.split(".");
                         var iterLocal = el;
@@ -220,7 +230,7 @@ HTMLElement.prototype.jel = function() {
                         // el[p] = attributes[a][p];
                     }
                     break;
-                case "jel":
+                case jel.mapKeywords.jel:
                     for (var c in attributes[a])
                     switch (c) {
                         case "name":

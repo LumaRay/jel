@@ -104,6 +104,15 @@ This library should help move from explicit HTML markup to javascript objects co
     
     jel.GetTemplate(<templateName>) - returns template as a string or {} or [] or function or undefined if not exists
 
+##### Additional settings:
+
+    jel settings can be accessed by global jel.settings object:
+        jel.settings.allowScripts - if set to false, insertion of script tags will be blocked by the library (default - true);
+        jel.settings.mapKeywords - a key:value object, where keys - default library keywords, 
+            and values - the corresponding keywords the library looks for when creating and object.
+            By altering values, user can change which keywords the jel library should look for 
+            (it case the default ones are reserved by some other user's code).
+            E.g.: jel.settings.mapKeywords.html = "elternate_html_key"; jel("div", {elternate_html_key: "<p>Hello Jonh Doe!</p>"});
 
 ### Examples 
 
