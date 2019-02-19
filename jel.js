@@ -16,7 +16,19 @@ function jel() {
     return elParent.jel.apply(elParent, arguments);
 }
 
-jel.allowScripts = true;
+jel.settings = {};
+
+jel.settings.allowScripts = true;
+
+jel.settings.mapKeywords = {
+    innerHTML: "innerHTML",
+    html: "html",
+    children: "children",
+    chi: "chi",
+    properties: "properties",
+    prop: "prop",
+    jel: "jel"
+}
 
 jel._templates = {};
 
@@ -31,16 +43,6 @@ jel.SetTemplate = function (strTemplateName, jelTemplate) {
 
 jel.GetTemplate = function (strTemplateName) {
     return this._templates[strTemplateName];
-}
-
-jel.mapKeywords = {
-    innerHTML: "innerHTML",
-    html: "html",
-    children: "children",
-    chi: "chi",
-    properties: "properties",
-    prop: "prop",
-    jel: "jel"
 }
 
 HTMLElement.prototype.jel = function() {
@@ -85,7 +87,7 @@ HTMLElement.prototype.jel = function() {
     }
     
     function jelAddHTML(el, strHTML) {
-        if (!jel.allowScripts && strHTML.search("<script") != -1)
+        if (!jel.settings.allowScripts && strHTML.search("<script") != -1)
             return undefined;
         return el.appendChild(document.createRange().createContextualFragment(strHTML));
     }
@@ -173,8 +175,8 @@ HTMLElement.prototype.jel = function() {
         switch (typeof attributes[a]) {
         case "string":
             switch (a) {
-                case jel.mapKeywords.innerHTML:
-                case jel.mapKeywords.html:
+                case jel.settings.mapKeywords.innerHTML:
+                case jel.settings.mapKeywords.html:
                     jelAddHTML(el, attributes[a]);
                     break;
                 case "style":
@@ -196,8 +198,8 @@ HTMLElement.prototype.jel = function() {
                 case "class":
                     jelSetClass(el, attributes[a]);
                     break;
-                case jel.mapKeywords.children:
-                case jel.mapKeywords.chi:
+                case jel.settings.mapKeywords.children:
+                case jel.settings.mapKeywords.chi:
                     if (Array.isArray(attributes[a]))
                     for (var c in attributes[a])
                     switch (typeof attributes[a][c]) {
@@ -214,8 +216,8 @@ HTMLElement.prototype.jel = function() {
                         default:
                     }
                     break;
-                case jel.mapKeywords.properties:
-                case jel.mapKeywords.prop:
+                case jel.settings.mapKeywords.properties:
+                case jel.settings.mapKeywords.prop:
                     for (var p in attributes[a]) {
                         var arLocalProp = p.split(".");
                         var iterLocal = el;
@@ -230,7 +232,7 @@ HTMLElement.prototype.jel = function() {
                         // el[p] = attributes[a][p];
                     }
                     break;
-                case jel.mapKeywords.jel:
+                case jel.settings.mapKeywords.jel:
                     for (var c in attributes[a])
                     switch (c) {
                         case "name":
@@ -322,7 +324,7 @@ HTMLElement.prototype.jel = function() {
     if (typeof jel._templates[arguments[0]] == "function")
         return jel._templates[arguments[0]].call(this, this, arguments[0]);
         
-    if (!jel.allowScripts && arguments[0].trim() == "script")
+    if (!jel.settings.allowScripts && arguments[0].trim() == "script")
         return undefined;
 
     var el = {};
