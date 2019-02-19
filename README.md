@@ -315,7 +315,7 @@ And / or you can see the results of running the examples and play with the libra
 
     jel("h1", {
         style:{color:"green"},
-        innerHTML:"Welcome to jel sandbox!"
+        html:"Welcome to jel sandbox!"
     });
 
     jel("a", {href:"https://github.com/LumaRay/jel", target:"_blank"})
@@ -327,24 +327,24 @@ And / or you can see the results of running the examples and play with the libra
         {style:{type:"text/css"}}, 
         ".wow{text-decoration:underline;}");
 
-    jel({ul:{children:[
-        {li:{class:"wow", children:["Easy use with JSON"]}},
-        {li:{children:["Vanilla <i>javascript</i>"]}},
-        {li:{children:["Templates"]}},
-        {li:{children:["Linked properties"]}}
+    jel({ul:{chi:[
+        {li:{class:"wow", chi:["Easy use with JSON"]}},
+        {li:{chi:["Vanilla <i>javascript</i>"]}},
+        {li:{chi:["Templates"]}},
+        {li:{chi:["Linked properties"]}}
     ]}}, [
-        jel({li:{children:[
+        jel({li:{chi:[
             {a:{href:"https://github.com/LumaRay/jel#usage",
                 target:"_blank",
-                properties:{innerText:"And more"}}}
+                prop:{innerText:"And more"}}}
             ]}})
     ]);
 
-    jel.SetTemplate("sample text template name", {div:{children:[
+    jel.SetTemplate("sample text template name", {div:{chi:[
         "In case you have ",
-        {i:{children:["a mixed text content"]}},
+        {i:{chi:["a mixed text content"]}},
         ", it is still possible ",
-        {b:{children:["to list them as child elements"]}},
+        {b:{chi:["to list them as child elements"]}},
         " or <u>use markup inside your text.</u>"
     ]}});
 
