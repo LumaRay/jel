@@ -85,7 +85,15 @@ This library should help move from explicit HTML markup to javascript objects co
             local: "<localElementProperty0>[.<localElementProperty1>[.<localElementProperty2[...]>]]"
                 localElementProperty<n> - property (sub)name for current created element
          
-                
+##### Extended jel element functions:
+
+    <jelElement>.jelEx.AddPropertyLink(<target>, <local>)
+        jelElement - HTMLElement, created using jel function.
+        target, local - see <JelElementPropertyLinks>
+    <jelElement>.jelEx.AddPropertyOrder(<target>, <local>)
+        jelElement - HTMLElement, created using jel function.
+        target, local - see <JelElementPropertyOrders>
+
 ##### Using Templates:
 
     jel.SetTemplate(<templateName>, <JelTemplate>)
