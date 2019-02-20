@@ -67,7 +67,8 @@ This library should help move from explicit HTML markup to javascript objects co
                 if <param> == "root", <val> - indicates that this is a component root element, should be empty string ""
                 if <param> == "links", <val> = <JelElementPropertyLinks>
                 if <param> == "orders", <val> = <JelElementPropertyOrders>
-        JelElementPropertyLinks: {<target0>: <local0>[, <target1>: <local1>[, ...]]} - link properties of a child element to one of it's parent elements
+        JelElementPropertyLinks: {<target0>: <local0>[, <target1>: <local1>[, ...]]} or [{<target0>: <local0>}[, {<target1>: <local1>}[, ...]]]
+         - link properties of a child element to one of it's parent elements
             target: "<targetElementType>.<targetElementCustomProperty0>[.<targetElementCustomProperty1>[.<targetElementCustomProperty2[...]>]]"
                 targetElementType:
                     if <targetElementType> == "root", the link is created for a closest parent element marked as jel:{root:""}
@@ -75,7 +76,8 @@ This library should help move from explicit HTML markup to javascript objects co
                 targetElementCustomProperty<n> - custom property (sub)name for the selected parent element
             local: "<localElementProperty0>[.<localElementProperty1>[.<localElementProperty2[...]>]]"
                 localElementProperty<n> - property (sub)name for current created element
-        JelElementPropertyOrders: {<target0>: <local0>[, <target1>: <local1>[, ...]]} - adds a function  (<newPropValue>){} : Object  to a target 
+        JelElementPropertyOrders: {<target0>: <local0>[, <target1>: <local1>[, ...]]} or [{<target0>: <local0>}[, {<target1>: <local1>}[, ...]]]
+         - adds a function  (<newPropValue>){} : Object  to a target 
         that changes properties of added local elements at once
             target: "<targetElementType>.<targetElementCustomProperty0>[.<targetElementCustomProperty1>[.<targetElementCustomProperty2[...]>]]"
                 targetElementType:
