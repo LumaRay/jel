@@ -248,7 +248,7 @@ HTMLElement.prototype.jel = function() {
                             if (typeof attributes[a][c] != "object")
                                 break;
                             for (var p in attributes[a][c]) {
-                                if (typeof attributes[a][c][p] == "object" && Array.isArray(attributes[a][c][p]))
+                                if (typeof attributes[a][c][p] == "object")
                                     for (var pp in attributes[a][c][p])
                                         el.jelEx.AddPropertyLink(pp, attributes[a][c][p][pp]);
                                 else
@@ -259,7 +259,7 @@ HTMLElement.prototype.jel = function() {
                             if (typeof attributes[a][c] != "object")
                                 break;
                             for (var p in attributes[a][c]) {
-                                if (typeof attributes[a][c][p] == "object" && Array.isArray(attributes[a][c][p]))
+                                if (typeof attributes[a][c][p] == "object")
                                     for (var pp in attributes[a][c][p])
                                         el.jelEx.AddPropertyOrder(pp, attributes[a][c][p][pp]);
                                 else
