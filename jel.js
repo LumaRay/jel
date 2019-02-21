@@ -1,6 +1,6 @@
 /* 
     jel: Javascript Elements
-    Version: 0.1.5
+    Version: 0.2.1
     A vanilla javascript DOM elements creation and management helper library
     Created by: Yury Laykov / Russia, Zelenograd
     2019
@@ -211,27 +211,31 @@ HTMLElement.prototype.jel = function() {
                             jelAddHTML(el, attributes[a][c]);
                             break;
                         case "function":
-                            attributes[a][c].call(el, el);
+                            var res = attributes[a][c].call(el, el);
+                            if (res === false)
+                                return;
+                            if (res)
+                                el.jel(res);
                             break;
                         default:
                     }
                     break;
-                case jel.settings.mapKeywords.properties:
-                case jel.settings.mapKeywords.prop:
-                    for (var p in attributes[a]) {
-                        var arLocalProp = p.split(".");
-                        var iterLocal = el;
-                        for (var lp = 0; lp < arLocalProp.length - 1; lp++) {
-                            if (typeof iterLocal[arLocalProp[lp]] == "undefined") {
-                                iterLocal[arLocalProp[lp]] = {};
-                                // throw "Invalid local property";
-                            }
-                            iterLocal = iterLocal[arLocalProp[lp]];
-                        }
-                        iterLocal[arLocalProp[arLocalProp.length - 1]] = attributes[a][p];
-                        // el[p] = attributes[a][p];
-                    }
-                    break;
+                // case jel.settings.mapKeywords.properties:
+                // case jel.settings.mapKeywords.prop:
+                //     for (var p in attributes[a]) {
+                //         var arLocalProp = p.split(".");
+                //         var iterLocal = el;
+                //         for (var lp = 0; lp < arLocalProp.length - 1; lp++) {
+                //             if (typeof iterLocal[arLocalProp[lp]] == "undefined") {
+                //                 iterLocal[arLocalProp[lp]] = {};
+                //                 // throw "Invalid local property";
+                //             }
+                //             iterLocal = iterLocal[arLocalProp[lp]];
+                //         }
+                //         iterLocal[arLocalProp[arLocalProp.length - 1]] = attributes[a][p];
+                //         // el[p] = attributes[a][p];
+                //     }
+                //     break;
                 case jel.settings.mapKeywords.jel:
                     for (var c in attributes[a])
                     switch (c) {
@@ -281,8 +285,8 @@ HTMLElement.prototype.jel = function() {
     
     function jelSoftClone(oSrc) {
         var oTrg = {};
-        for (var o in oSrc)
-            oTrg[o] = oSrc[o];
+        for (var k in oSrc)
+            oTrg[k] = oSrc[k];
         return oTrg;
     }
 
@@ -293,6 +297,22 @@ HTMLElement.prototype.jel = function() {
         return aDest;
     }
     
+    function jelSoftJoin(oSrc, oToJoin) {
+        oSrc = oSrc || {};
+        oToJoin = oToJoin || {};
+        for (var k in oToJoin)
+            oSrc[k] = oToJoin[k];
+        return oSrc;
+    }
+
+    function jelSoftJoinArray(aSrc, aToJoin) {
+        aSrc = aSrc || [];
+        aToJoin = aToJoin || [];
+        for (var i = 0; i < aToJoin.length; i++)
+            aSrc.push(aToJoin[i]);
+        return aSrc;
+    }
+
     
     // --------------------------------------------------------------------
     // Startup code here
@@ -346,7 +366,7 @@ HTMLElement.prototype.jel = function() {
         throw "Format error";
 
     if (typeof jel._templates[arguments[0]] == "function")
-        return jel._templates[arguments[0]].call(this, this, arguments[0]);
+        return jel._templates[arguments[0]].call(this, this, jelSoftCloneArray(arguments));
         
     if (!jel.settings.allowScripts && arguments[0].trim() == "script")
         return undefined;
@@ -363,10 +383,15 @@ HTMLElement.prototype.jel = function() {
         if (typeof appliedTemplatesAttr == "undefined")
             appliedTemplatesAttr = {};
         appliedTemplatesAttr[arguments[0]] = true;
-        el = this.jel(jel._templates[arguments[0]], {_appliedTemplates: appliedTemplatesAttr});
+        var args = jelSoftCloneArray(arguments);
+        args[0] = jel._templates[arguments[0]];
+        args.push({_appliedTemplates: appliedTemplatesAttr});
+        el = this.jel.apply(this, args);
         // el.jelEx._appliedTemplates[arguments[0]] = true;
-    } else    
+        return el;
+    } else {
         el = document.createElement(arguments[0]);
+    }
 
     el.jelEx = {};
     el.jelEx._ownerElement = el;
@@ -388,6 +413,32 @@ HTMLElement.prototype.jel = function() {
         throw "Unknown error";
 
     for (var i = 1; i < arguments.length; i++)
+    if (typeof arguments[i] == "object" && 
+            (typeof arguments[i][jel.settings.mapKeywords.properties] == "object" || 
+                typeof arguments[i][jel.settings.mapKeywords.prop] == "object") 
+    ) {
+        var props = arguments[i][jel.settings.mapKeywords.properties] || arguments[i][jel.settings.mapKeywords.prop];
+        for (var p in props) {
+            var arLocalProp = p.split(".");
+            var iterLocal = el;
+            for (var lp = 0; lp < arLocalProp.length - 1; lp++) {
+                if (typeof iterLocal[arLocalProp[lp]] == "undefined")
+                    iterLocal[arLocalProp[lp]] = {};
+                iterLocal = iterLocal[arLocalProp[lp]];
+            }
+            iterLocal[arLocalProp[arLocalProp.length - 1]] = props[p];
+        }
+    }
+
+    // for (var i = 1; i < arguments.length; i++)
+    // if (typeof arguments[i] == "object" && 
+    //     typeof arguments[i]["jel"] == "object" && 
+    //     typeof arguments[i]["jel"]["param"] == "object")
+    //     el.jelEx["param"] = jelSoftMerge(el.jelEx["param"], arguments[i]["jel"]["param"])
+    
+    //     el.jelEx["param"] = jelSoftMerge(el.jelEx["param"], arguments[i]["jel"]["param"])
+
+    for (var i = 1; i < arguments.length; i++)
     switch (typeof arguments[i]) {
         case "string":
             jelAddHTML(el, arguments[i]);
@@ -399,8 +450,11 @@ HTMLElement.prototype.jel = function() {
                 jelSetAttributes(el, arguments[i], appliedTemplatesAttr);
             break;
         case "function":
-            if (arguments[i].call(el, el) === false)
+            var res = arguments[i].call(el, el);
+            if (res === false)
                 return undefined;
+            if (res)
+                el.jel(res);
             break;
         default:
     }
@@ -409,7 +463,3 @@ HTMLElement.prototype.jel = function() {
 
     return el;
 }
-
-// document.getElementsByTagName("html")[0].jel("meta");
-// document.head.parentElement.jel("meta");
-

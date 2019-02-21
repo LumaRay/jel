@@ -128,7 +128,8 @@ This library should help move from explicit HTML markup to javascript objects co
 
 You can test the lib [in this sandbox](https://codepen.io/lumaray/pen/VgEMpg).
 
-And / or you can see the results of running the examples and play with the library in your browser's console [on GitHub page](https://lumaray.github.io/jel/)
+And / or you can check our [test GitHub page](https://lumaray.github.io/jel/) to see extended examples with templates in action 
+(open developer tools and view the sources)
 
     jel([
         {p:"Hello John Doe."},

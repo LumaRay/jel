@@ -8,6 +8,8 @@
     <script src="./jel.js"></script>
 </head>
 <body>
+    <script src="./components/sample-form-field.jel.js"></script>
+    <script src="./components/sample-form.jel.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function(event) { 
 
@@ -23,6 +25,17 @@
                 ]},
                 "hr"
             ]);
+			
+			  var aFields = [
+				{label:"fld 1 label", type: "text", value:"value1"},
+				{label:"fld 2 label", type: "password", value:"value2"},
+				{label:"fld 3 label", type: "checkbox", value:true},
+				{label:"", type: "submit", value:"Send"}
+			  ];
+			  var el = jel({"jel:sample:form": {prop:{jelFields:aFields}}});
+			  // var el = jel("jel:sample:form");
+			  // el.jelFields = aFields;
+			
             document.head.jel("meta");
             document.getElementsByTagName("html")[0].jel("head2");
             document.head.parentElement.jel("body2");
