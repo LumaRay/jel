@@ -32,9 +32,11 @@ This library should help move from explicit HTML markup to javascript objects co
                 string - add to inner HTML
                 {} - set <JelElementAttributesAndJelProperties>
                 [] - child <JelElementInitializationObjects>
-                function - called immediately function(<el>){} : boolean
+                function - called immediately function(<el>){} : undefined, or boolean, or <JelElementInitializationObject(s)>
                     el - current created HTMLElement
-                    if returns false - the will cancel parsing current created tree object and return undefined from current inner jel function
+                    - if returns false - this will cancel parsing current created tree object and return undefined from current inner jel function;
+                    - if returns other !undefined value - jel tries to append them as <JelElementInitializationObject(s)>;
+                    - if returns undefined (no return value) - the parsing process goes on.
         JelElementInitializationObject: {<tagName>: <JelElementAttributesAndJelProperties>}
             tagName - set tag / template name
         JelElementAttributesAndJelProperties: {<param0>: <val0>[, <param1>: <val1>[, ...]]}
@@ -50,7 +52,8 @@ This library should help move from explicit HTML markup to javascript objects co
                         if <val> is {}, values in it can be function (<el>, <curStyleParam>) {... return <newStyleParam>}
                         if <val> is [], items in it can be <addToStyle> or [] (then recursive) or function (<el>, <curStyle>) {... return <addToStyle>}
                             addToStyle - key-value style object {}
-                    if <param> == "children" or <param> == "chi", <val> - array [] of <JelElementInitializationObjects>
+                    if <param> == "children" or <param> == "chi", <val> - array [] of <JelElementInitializationObjects>, 
+                    or html strings with child elements' contents, or functions that can append jel elements manually or by returning jel objects/arrays.
                     if <param> == "properties" or <param> == "prop", <val> = <Properties>
                     if <param> == "innerHTML" or <param> == "html", <val> = html string to append to the element's inner content
                     if <param> == "jel", <val> = <JelParameters>
