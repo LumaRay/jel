@@ -1,6 +1,6 @@
 /* 
     jel: Javascript Elements
-    Version: 0.2.2
+    Version: 0.2.3
     A vanilla javascript DOM elements creation and management helper library
     Created by: Yury Laykov / Russia, Zelenograd
     2019
@@ -239,13 +239,8 @@ HTMLElement.prototype.jel = function() {
                         case "links":
                             if (typeof attributes[a][c] != "object")
                                 break;
-                            for (var p in attributes[a][c]) {
-                                if (typeof attributes[a][c][p] == "object")
-                                    for (var pp in attributes[a][c][p])
-                                        el.jelEx.AddPropertyLink(pp, attributes[a][c][p][pp]);
-                                else
-                                    el.jelEx.AddPropertyLink(p, attributes[a][c][p]);
-                            }
+                            for (var p in attributes[a][c])
+                                el.jelEx.AddPropertyLink(p, attributes[a][c][p]);
                             break;
                         default:
                     }
