@@ -1,6 +1,6 @@
 /* 
     jel: Javascript Elements
-    Version: 0.2.1
+    Version: 0.2.2
     A vanilla javascript DOM elements creation and management helper library
     Created by: Yury Laykov / Russia, Zelenograd
     2019
