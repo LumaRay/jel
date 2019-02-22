@@ -69,7 +69,6 @@ This library should help move from explicit HTML markup to javascript objects co
                 if <param> == "name", <val> - subelement special jel string name for a separate jel elements' naming tree
                 if <param> == "root", <val> - indicates that this is a component root element, should be empty string ""
                 if <param> == "links", <val> = <JelElementPropertyLinks>
-                if <param> == "orders", <val> = <JelElementPropertyOrders>
         JelElementPropertyLinks: {<target0>: <local0>[, <target1>: <local1>[, ...]]} or [{<target0>: <local0>}[, {<target1>: <local1>}[, ...]]]
          - link properties of a child element to one of it's parent elements
             target: "<targetElementType>.<targetElementCustomProperty0>[.<targetElementCustomProperty1>[.<targetElementCustomProperty2[...]>]]"
@@ -79,25 +78,12 @@ This library should help move from explicit HTML markup to javascript objects co
                 targetElementCustomProperty<n> - custom property (sub)name for the selected parent element
             local: "<localElementProperty0>[.<localElementProperty1>[.<localElementProperty2[...]>]]"
                 localElementProperty<n> - property (sub)name for current created element
-        JelElementPropertyOrders: {<target0>: <local0>[, <target1>: <local1>[, ...]]} or [{<target0>: <local0>}[, {<target1>: <local1>}[, ...]]]
-         - adds a function  (<newPropValue>){} : Object  to a target 
-        that changes properties of added local elements at once
-            target: "<targetElementType>.<targetElementCustomProperty0>[.<targetElementCustomProperty1>[.<targetElementCustomProperty2[...]>]]"
-                targetElementType:
-                    if <targetElementType> == "root", the order is added for a closest parent element marked as jel:{root:""}
-                    if <targetElementType> == "master", the order is added for a closest parent element marked as jel:{name:"..."}
-                targetElementCustomProperty<n> - custom function (sub)name for the selected parent element
-            local: "<localElementProperty0>[.<localElementProperty1>[.<localElementProperty2[...]>]]"
-                localElementProperty<n> - property (sub)name for current created element
          
 ##### Extended jel element functions:
 
     <jelElement>.jelEx.AddPropertyLink(<target>, <local>) - see <JelElementPropertyLinks>
         jelElement - HTMLElement, created using jel function.
         target, local - see <JelElementPropertyLinks>
-    <jelElement>.jelEx.AddPropertyOrder(<target>, <local>) - see <JelElementPropertyOrders>
-        jelElement - HTMLElement, created using jel function.
-        target, local - see <JelElementPropertyOrders>
 
 ##### Using Templates:
 
@@ -225,7 +211,12 @@ And / or you can check our [test GitHub page](https://lumaray.github.io/jel/) to
             children: [
                 {div: {id: "testid2", class: "testcl", name: "testname2", 
                     style: "width: 50px; height: 50px; background: green;", 
-                    jel: {orders: {"master.SetBackgroundColor": "style.backgroundColor"}}}},
+                    jel: {
+                        links: {
+                            "master.testBackgroundColor": "style.backgroundColor",
+                            "root.testEventListener": "addEventListener"
+                        }
+                    }}},
                 "Bla <b>bla</b>",
                 {div: {
                     id: "testid3", class: "testcl", name: "testname3", 
@@ -235,13 +226,11 @@ And / or you can check our [test GitHub page](https://lumaray.github.io/jel/) to
                         "root.testEventListener": "addEventListener",
                         "root.testOnClick": "onclick",
                         "master.testBackgroundColor": "style.backgroundColor"
-                    }, orders: {
-                        "master.SetBackgroundColor": "style.backgroundColor"
                     }}
                 }},
                 "Yeee ",
                 "Cool",
-                {div:{children:[{div:{children:[{div:{children:[{div:{jel:{name: "lowestNode"}}}, function(el) {window.ttt = el;}]}}]}}]}}
+                {div:{chi:[{div:{chi:[{div:{chi:[{div:{jel:{name: "lowestNode"}}}, function(el) {window.ttt = el;}]}}]}}]}}
             ],
             innerHTML: "test<b>!</b>",
             jel: {
@@ -266,11 +255,11 @@ And / or you can check our [test GitHub page](https://lumaray.github.io/jel/) to
         }
     );
 
-    elTest.testEventListener("click",function(e){console.log(e.target);});
+    for (e in elTest.testEventListener) {
+        elTest.testEventListener[e].call(elTest,"click",function(e){console.log(e.target);});
+    };
 
-    elTest.testOnClick = function(){elTest.SetBackgroundColor("pink")};
-
-    elTest.testBackgroundColor = "grey";
+    elTest.testOnClick = function(){elTest.testBackgroundColor = "pink"};
 
     jel("div",{children: [
         {div:{children: [

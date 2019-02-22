@@ -101,6 +101,11 @@ HTMLElement.prototype.jel = function() {
     }
     
     function jelAddPropertyLink(strTarget, strLocal) {
+        if ((typeof strLocal == "object") && Array.isArray(strLocal)) {
+            for (var l = 0; l < strLocal.length; l++)
+                jelAddPropertyLink.call(this, strTarget, strLocal[l]);
+            return;
+        }
         var el = this._ownerElement;
         var arTargetProp = strTarget.split(".");
         var arLocalProp = strLocal.split(".");
@@ -119,52 +124,35 @@ HTMLElement.prototype.jel = function() {
             iterLocal = iterLocal[arLocalProp[lp]];
         }
         (function(arTargetProp, iterTarget, arLocalProp, iterLocal) {
-            Object.defineProperty(iterTarget, arTargetProp[arTargetProp.length - 1], {
-                get: function() { return iterLocal[arLocalProp[arLocalProp.length - 1]]; },
-                set: function(newValue) { iterLocal[arLocalProp[arLocalProp.length - 1]] = newValue; }
-            });
-        })(arTargetProp, iterTarget, arLocalProp, iterLocal);
-    }
-
-    function jelAddPropertyOrder(strTarget, oLocal) {
-        if ((typeof oLocal == "object") && Array.isArray(oLocal)) {
-            for (var l in oLocal)
-                jelAddPropertyOrder.call(this, strTarget, oLocal[l]);
-            return;
-        }
-        var el = this._ownerElement;
-        var arTargetProp = strTarget.split(".");
-        var arLocalProp = oLocal.split(".");
-        var iterTarget = el.jelEx._namedParent;
-        if (arTargetProp[0] === "root")
-            iterTarget = el.jelEx._componentRoot;
-        for (var tp = 1; tp < arTargetProp.length - 1; tp++) {
-            if (typeof iterTarget[arTargetProp[tp]] == "undefined")
-                iterTarget[arTargetProp[tp]] = {};
-            iterTarget = iterTarget[arTargetProp[tp]];
-        }
-        var iterLocal = el;
-        for (var lp = 0; lp < arLocalProp.length - 1; lp++) {
-            if (typeof iterLocal[arLocalProp[lp]] == "undefined")
-                throw "Invalid local property";
-            iterLocal = iterLocal[arLocalProp[lp]];
-        }
-        (function(arTargetProp, iterTarget, arLocalProp, iterLocal) {
-            if (typeof iterTarget[arTargetProp[arTargetProp.length - 1]] == "undefined") {
-                iterTarget[arTargetProp[arTargetProp.length - 1]] = function (newValue) {
-                    for (var p in iterTarget[arTargetProp[arTargetProp.length - 1]]._orders)
-                        iterTarget[arTargetProp[arTargetProp.length - 1]]._orders[p]
-                        .localPropParent[
-                            iterTarget[arTargetProp[arTargetProp.length - 1]]._orders[p]
-                            .localPropName
-                        ] = newValue;
-                    return iterTarget;
-                };
-                iterTarget[arTargetProp[arTargetProp.length - 1]]._orders = [];
+            var strTargetPropName = arTargetProp[arTargetProp.length - 1];
+            var strLocalPropName = arLocalProp[arLocalProp.length - 1];
+            if (typeof iterTarget[strTargetPropName] == "undefined") {
+                Object.defineProperty(iterTarget, strTargetPropName, {
+                    get: function() { 
+                        // return iterLocal[strLocalPropName]; 
+                        var res = [];
+                        var linkedProps = iterTarget.jelExt[strTargetPropName]._properties;
+                        for (var p in linkedProps)
+                            res.push(linkedProps[p].localPropParent[linkedProps[p].localPropName]);
+                        if (res.length === 1)
+                            res = res[0];
+                        return res;
+                    },
+                    set: function(newValue) { 
+                        // iterLocal[strLocalPropName] = newValue;
+                        var linkedProps = iterTarget.jelExt[strTargetPropName]._properties;
+                        for (var p in linkedProps)
+                            linkedProps[p].localPropParent[linkedProps[p].localPropName] = newValue;
+                        // return iterTarget;
+                    }
+                });
+                iterTarget.jelExt = iterTarget.jelExt || {};
+                iterTarget.jelExt[strTargetPropName] = {};
+                iterTarget.jelExt[strTargetPropName]._properties = [];
             }
-            iterTarget[arTargetProp[arTargetProp.length - 1]]._orders.push({
+            iterTarget.jelExt[strTargetPropName]._properties.push({
                 localPropParent: iterLocal,
-                localPropName: arLocalProp[arLocalProp.length - 1]
+                localPropName: strLocalPropName
             });
         })(arTargetProp, iterTarget, arLocalProp, iterLocal);
     }
@@ -259,17 +247,7 @@ HTMLElement.prototype.jel = function() {
                                     el.jelEx.AddPropertyLink(p, attributes[a][c][p]);
                             }
                             break;
-                        case "orders":
-                            if (typeof attributes[a][c] != "object")
-                                break;
-                            for (var p in attributes[a][c]) {
-                                if (typeof attributes[a][c][p] == "object")
-                                    for (var pp in attributes[a][c][p])
-                                        el.jelEx.AddPropertyOrder(pp, attributes[a][c][p][pp]);
-                                else
-                                    el.jelEx.AddPropertyOrder(p, attributes[a][c][p]);
-                            }
-                            default:
+                        default:
                     }
                     break;
                 default:
@@ -400,7 +378,6 @@ HTMLElement.prototype.jel = function() {
     el.jelEx._componentRoot = el;
     el.jelEx._topComponentRoot = el;
     el.jelEx.AddPropertyLink = jelAddPropertyLink;
-    el.jelEx.AddPropertyOrder = jelAddPropertyOrder;
     // el.jelEx._appliedTemplates = {};
 
     if (this.jelEx !== undefined) {

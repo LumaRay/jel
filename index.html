@@ -97,7 +97,12 @@
                     children: [
                         {div: {id: "testid2", class: "testcl", name: "testname2", 
                             style: "width: 50px; height: 50px; background: green;", 
-                            jel: {orders: {"master.SetBackgroundColor": "style.backgroundColor"}}}},
+                            jel: {
+                                links: {
+                                    "master.testBackgroundColor": "style.backgroundColor",
+                                    "root.testEventListener": "addEventListener"
+                                }
+                            }}},
                         "Bla <b>bla</b>",
                         {div: {
                             id: "testid3", class: "testcl", name: "testname3", 
@@ -107,8 +112,6 @@
                                 "root.testEventListener": "addEventListener",
                                 "root.testOnClick": "onclick",
                                 "master.testBackgroundColor": "style.backgroundColor"
-                            }, orders: {
-                                "master.SetBackgroundColor": ["style.backgroundColor"]
                             }}
                         }},
                         "Yeee ",
@@ -137,9 +140,10 @@
                     el.jel("h6");
                 }
             );
-            elTest.testEventListener("click",function(e){console.log(e.target);});
-            elTest.testOnClick = function(){elTest.SetBackgroundColor("pink")};
-            elTest.testBackgroundColor = "grey";
+            for (e in elTest.testEventListener) {
+                elTest.testEventListener[e].call(elTest,"click",function(e){console.log(e.target);});
+            };
+            elTest.testOnClick = function(){elTest.testBackgroundColor = "pink"};
 
             // jel("div",{children: [
             //     {dev:{children: [
