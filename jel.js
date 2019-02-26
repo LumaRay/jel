@@ -1,6 +1,7 @@
 /* 
     jel: Javascript Elements
-    Version: 0.2.3
+	https://github.com/LumaRay/jel
+    Version: 0.2.4
     A vanilla javascript DOM elements creation and management helper library
     Created by: Yury Laykov / Russia, Zelenograd
     2019
@@ -98,6 +99,8 @@ HTMLElement.prototype.jel = function() {
             el.appendChild(arr[rel]);
         else if (typeof arr[rel] == "object")
             el.jel(arr[rel], {_appliedTemplates: appliedTemplatesAttr});
+		else if (typeof arr[rel] == "function")
+			arr[rel].call(el, el);
     }
     
     function jelAddPropertyLink(strTarget, strLocal) {
@@ -298,13 +301,9 @@ HTMLElement.prototype.jel = function() {
                                 typeof arguments[arguments.length - 1]._appliedTemplates != "undefined" ? 
                                 jelSoftClone(arguments[arguments.length - 1]._appliedTemplates) : undefined;
 
-    // if ((typeof arguments[0] == "object" && Array.isArray(arguments[0])) && 
-    //     (arguments.length === 1 || arguments.length === 2 && typeof appliedTemplatesAttr !== undefined )) {
     if (typeof arguments[0] == "object" && Array.isArray(arguments[0])) {
         var arrEls = [];
         for (var o in arguments[0]) {
-            // var newEl = this.jel(arguments[0][o], {_appliedTemplates: appliedTemplatesAttr});
-            // var newArgs = arguments.slice(0);
             var newArgs = jelSoftCloneArray(arguments);
             newArgs[0] = arguments[0][o];
             var newEl = this.jel.apply(this, newArgs);
@@ -315,9 +314,6 @@ HTMLElement.prototype.jel = function() {
     }
 
     if (typeof arguments[0] == "object") {
-        // if (Array.isArray(arguments[0]))
-            // return undefined;
-
         var tagName = undefined;
         var attrs = undefined;
         for (var key in arguments[0]) {
@@ -335,6 +331,10 @@ HTMLElement.prototype.jel = function() {
         return this.jel.apply(this, arguments);
     }
 
+	if (typeof arguments[0] == "function") {
+		return arguments[0].call(this);
+	}
+	
     if (typeof arguments[0] != "string")
         throw "Format error";
 
@@ -346,13 +346,8 @@ HTMLElement.prototype.jel = function() {
 
     var el = {};
 
-    // var fromTemplate = typeof arguments[arguments.length - 1] == "boolean" ? arguments[arguments.length - 1] : false;
-    // if (!fromTemplate && typeof jel._templates[arguments[0]] == "object") {
     if  (typeof jel._templates[arguments[0]] == "object" && 
         (typeof appliedTemplatesAttr == "undefined" || appliedTemplatesAttr[arguments[0]] !== true)) {
-        // if (Array.isArray(jel._templates[arguments[0]])) {
-        //     this.jelEx.appliedTemplatesAttr[arguments[0]] = true;
-        // }
         if (typeof appliedTemplatesAttr == "undefined")
             appliedTemplatesAttr = {};
         appliedTemplatesAttr[arguments[0]] = true;
@@ -360,7 +355,6 @@ HTMLElement.prototype.jel = function() {
         args[0] = jel._templates[arguments[0]];
         args.push({_appliedTemplates: appliedTemplatesAttr});
         el = this.jel.apply(this, args);
-        // el.jelEx._appliedTemplates[arguments[0]] = true;
         return el;
     } else {
         el = document.createElement(arguments[0]);
@@ -373,7 +367,6 @@ HTMLElement.prototype.jel = function() {
     el.jelEx._componentRoot = el;
     el.jelEx._topComponentRoot = el;
     el.jelEx.AddPropertyLink = jelAddPropertyLink;
-    // el.jelEx._appliedTemplates = {};
 
     if (this.jelEx !== undefined) {
         el.jelEx._namedParentForChildren = this.jelEx._namedParentForChildren;
