@@ -162,100 +162,90 @@ HTMLElement.prototype.jel = function() {
 
     function jelSetAttributes(el, attributes, appliedTemplatesAttr) {
         for (var a in attributes)
-        if (a != "_appliedTemplates")
-        switch (typeof attributes[a]) {
-        case "string":
-            switch (a) {
-                case jel.settings.mapKeywords.innerHTML:
-                case jel.settings.mapKeywords.html:
-                    jelAddHTML(el, attributes[a]);
+        switch (a) {
+        case jel.settings.mapKeywords.innerHTML:
+        case jel.settings.mapKeywords.html:
+            jelAddHTML(el, attributes[a]);
+            break;
+        case "style":
+            if (typeof attributes[a] == "string") {
+                var tmpAttr = el.getAttribute(a);
+                if (tmpAttr === null)
+                    tmpAttr = "";
+                el.setAttribute(a, (tmpAttr + " " + attributes[a]).trim());
+            } else if (typeof attributes[a] == "object")
+                jelSetStyle(el, attributes[a]);
+            break;
+        case "class":
+            if (typeof attributes[a] == "string") {
+                var tmpAttr = el.getAttribute(a);
+                if (tmpAttr === null)
+                    tmpAttr = "";
+                el.setAttribute(a, (tmpAttr + " " + attributes[a]).trim());
+            } else if (typeof attributes[a] == "object")
+                jelSetClass(el, attributes[a]);
+            break;
+        case jel.settings.mapKeywords.children:
+        case jel.settings.mapKeywords.chi:
+            if (typeof attributes[a] == "object") {
+                if (Array.isArray(attributes[a]))
+                for (var c in attributes[a])
+                switch (typeof attributes[a][c]) {
+                case "object":
+                    el.jel(attributes[a][c], {_appliedTemplates: appliedTemplatesAttr});
                     break;
-                case "style":
-                case "class":
-                    var tmpAttr = el.getAttribute(a);
-                    if (tmpAttr === null)
-                        tmpAttr = "";
-                    el.setAttribute(a, (tmpAttr + " " + attributes[a]).trim());
+                case "string":
+                    // var text = document.createTextNode("");
+                    jelAddHTML(el, attributes[a][c]);
+                    break;
+                case "function":
+                    var res = attributes[a][c].call(el, el);
+                    if (res === false)
+                        return;
+                    if (res)
+                        el.jel(res, {_appliedTemplates: appliedTemplatesAttr});
                     break;
                 default:
-                    el.setAttribute(a, attributes[a]);
+                }
+                else
+                    el.jel(attributes[a], {_appliedTemplates: appliedTemplatesAttr});
+            } else if (typeof attributes[a] == "function") {
+                var res = attributes[a].call(el, el);
+                if (res === false)
+                    return;
+                if (res)
+                    el.jel(res, {_appliedTemplates: appliedTemplatesAttr});   
             }
             break;
-        case "object":
-            switch (a) {
-                case "style":
-                    jelSetStyle(el, attributes[a]);
+        case jel.settings.mapKeywords.jel:
+            if (typeof attributes[a] == "object")
+            for (var c in attributes[a])
+            switch (c) {
+            case "name":
+                if (el.jelEx._namedParent !== el) {
+                    el.jelEx._namedParent[attributes[a][c]] = el;
+                    el.jelEx._namedParentForChildren = el;
+                }
+                break;
+            case "root":
+                el.jelEx._componentRoot = el;
+                break;
+            case "links":
+                if (typeof attributes[a][c] != "object")
                     break;
-                case "class":
-                    jelSetClass(el, attributes[a]);
-                    break;
-                case jel.settings.mapKeywords.children:
-                case jel.settings.mapKeywords.chi:
-                    if (Array.isArray(attributes[a]))
-                    for (var c in attributes[a])
-                    switch (typeof attributes[a][c]) {
-                        case "object":
-                            el.jel(attributes[a][c], {_appliedTemplates: appliedTemplatesAttr});
-                            break;
-                        case "string":
-                            // var text = document.createTextNode("");
-                            jelAddHTML(el, attributes[a][c]);
-                            break;
-                        case "function":
-                            var res = attributes[a][c].call(el, el);
-                            if (res === false)
-                                return;
-                            if (res)
-                                el.jel(res);
-                            break;
-                        default:
-                    }
-                    break;
-                // case jel.settings.mapKeywords.properties:
-                // case jel.settings.mapKeywords.prop:
-                //     for (var p in attributes[a]) {
-                //         var arLocalProp = p.split(".");
-                //         var iterLocal = el;
-                //         for (var lp = 0; lp < arLocalProp.length - 1; lp++) {
-                //             if (typeof iterLocal[arLocalProp[lp]] == "undefined") {
-                //                 iterLocal[arLocalProp[lp]] = {};
-                //                 // throw "Invalid local property";
-                //             }
-                //             iterLocal = iterLocal[arLocalProp[lp]];
-                //         }
-                //         iterLocal[arLocalProp[arLocalProp.length - 1]] = attributes[a][p];
-                //         // el[p] = attributes[a][p];
-                //     }
-                //     break;
-                case jel.settings.mapKeywords.jel:
-                    for (var c in attributes[a])
-                    switch (c) {
-                        case "name":
-                            if (el.jelEx._namedParent !== el) {
-                                el.jelEx._namedParent[attributes[a][c]] = el;
-                                el.jelEx._namedParentForChildren = el;
-                            }
-                            break;
-                        case "root":
-                            el.jelEx._componentRoot = el;
-                            break;
-                        case "links":
-                            if (typeof attributes[a][c] != "object")
-                                break;
-                            for (var p in attributes[a][c])
-                                el.jelEx.AddPropertyLink(p, attributes[a][c][p]);
-                            break;
-                        default:
-                    }
-                    break;
-                default:
+                for (var p in attributes[a][c])
+                    el.jelEx.AddPropertyLink(p, attributes[a][c][p]);
+                break;
+            default:
             }
             break;
-        case "function":
-            el.setAttribute(a, attributes[a].call(el, el, el.getAttribute(a)));
+        case "_appliedTemplates":
             break;
         default:
-            el.setAttribute(a, attributes[a]);
+            if (typeof attributes[a] == "string")
+                el.setAttribute(a, attributes[a]);
+            else if (typeof attributes[a] == "function")
+                el.setAttribute(a, attributes[a].call(el, el, el.getAttribute(a)));
         }
     }
     
