@@ -25,7 +25,7 @@ This library should help move from explicit HTML markup to javascript objects co
         arguments: <argument0>, [<argument1>[,<argument2>[,...]]] - arguments are applied in order they are set, 
         and the next one appends to the previous ones
             argument0 - can be string or {} or []
-                string - set tag / template name
+                string - set tag / template name (if == "" and argument1 - string, then just append html from argument1)
                 {} - <JelElementInitializationObject>
                 [] - array of <JelElementInitializationObjects>
             argument1+ - can be string or {} or [] or function
@@ -251,7 +251,7 @@ And / or you can check our [test GitHub page](https://lumaray.github.io/jel/) to
         function(el) {
             el.jel("h4");
             el.jel("h5");
-            el.jel("h6");
+            el.jel("","Some plain <u>HTML</u>");
         }
     );
 
