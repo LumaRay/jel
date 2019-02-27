@@ -239,6 +239,8 @@ HTMLElement.prototype.jel = function() {
             }
             break;
         case "_appliedTemplates":
+        case jel.settings.mapKeywords.properties:
+        case jel.settings.mapKeywords.prop:
             break;
         default:
             if (typeof attributes[a] == "function")
