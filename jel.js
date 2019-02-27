@@ -71,7 +71,7 @@ HTMLElement.prototype.jel = function() {
     }
     
     function jelSetClass(el, oClass) {
-        var strClass = el.class;
+        var strClass = el.getAttribute("class");
         if (!strClass)
             strClass = "";
         if (Array.isArray(oClass)) {
@@ -84,7 +84,7 @@ HTMLElement.prototype.jel = function() {
                 strClass = strClass + " " + oClass;
         }
 
-        el.class = strClass.trim();
+        el.setAttribute("class", strClass.trim());
     }
     
     function jelAddHTML(el, strHTML) {
