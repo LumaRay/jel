@@ -50,7 +50,7 @@ HTMLElement.prototype.jel = function() {
 
     function jelSetStyle(el, oStyle) {
         if (Array.isArray(oStyle))
-        for (var o in oStyle)
+        for (var o = 0; o < oStyle.length; o++)
             jelSetStyle(el, oStyle[o]);
         else {
             if (typeof oStyle == "function")
@@ -75,8 +75,8 @@ HTMLElement.prototype.jel = function() {
         if (strClass === null)
             strClass = "";
         if (Array.isArray(oClass)) {
-            for (o in oClass)
-                jelSetClass(el, oClass[o]);
+        for (var o = 0; o < oClass.length; o++)
+            jelSetClass(el, oClass[o]);
         } else {
             if (typeof oClass == "function")
                 strClass = strClass + " " + oClass.call(el, el, strClass.trim());
