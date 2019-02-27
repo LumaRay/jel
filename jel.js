@@ -241,10 +241,10 @@ HTMLElement.prototype.jel = function() {
         case "_appliedTemplates":
             break;
         default:
-            if (typeof attributes[a] == "string")
-                el.setAttribute(a, attributes[a]);
-            else if (typeof attributes[a] == "function")
+            if (typeof attributes[a] == "function")
                 el.setAttribute(a, attributes[a].call(el, el, el.getAttribute(a)));
+            else
+                el.setAttribute(a, attributes[a]);
         }
     }
     
