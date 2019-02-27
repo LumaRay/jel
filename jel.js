@@ -72,7 +72,7 @@ HTMLElement.prototype.jel = function() {
     
     function jelSetClass(el, oClass) {
         var strClass = el.class;
-        if (strClass === null)
+        if (!strClass)
             strClass = "";
         if (Array.isArray(oClass)) {
         for (var o = 0; o < oClass.length; o++)
