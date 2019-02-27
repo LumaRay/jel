@@ -71,20 +71,19 @@ HTMLElement.prototype.jel = function() {
     }
     
     function jelSetClass(el, oClass) {
-        var strClass = el.getAttribute("class");
-        if (!strClass)
-            strClass = "";
         if (Array.isArray(oClass)) {
         for (var o = 0; o < oClass.length; o++)
             jelSetClass(el, oClass[o]);
         } else {
+            var strClass = el.getAttribute("class");
+            if (!strClass)
+                strClass = "";
             if (typeof oClass == "function")
                 strClass = strClass + " " + oClass.call(el, el, strClass.trim());
             else
                 strClass = strClass + " " + oClass;
+            el.setAttribute("class", strClass.trim());
         }
-
-        el.setAttribute("class", strClass.trim());
     }
     
     function jelAddHTML(el, strHTML) {
