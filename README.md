@@ -6,6 +6,10 @@
 
 Simply turn all `<h1>that stuff</h1>` into `{h1: "this one"}` - [but this is just a beginning!](https://codepen.io/lumaray/pen/VgEMpg)
 
+Check out form examples:
+* [Using Materialize](https://codepen.io/lumaray/pen/gEpMJw?editors=0011)
+* [Using Bootstrap](https://codepen.io/lumaray/pen/EMjwRm?editors=0011)
+
 This library should help move from explicit HTML markup to javascript objects coding. Just retrieve JSON elements' init objects from a server or initialize them yourself, then convert them into common javascript objects and use with **jel** function (or add as templates for a later use).
 
     Created by: Yury Laykov / Russia, Zelenograd
