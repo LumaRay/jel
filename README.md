@@ -4,11 +4,11 @@
 
 *A vanilla javascript DOM elements creation and management helper library*
 
-Simply turn all `<h1>that stuff</h1>` into `{h1: "this one"}` - [but this is just a beginning!](https://codepen.io/lumaray/pen/VgEMpg)
+Simply turn all `<h1>that stuff</h1>` into `{h1: "this one"}` - [but this is just a beginning!](https://codepen.io/lumaray/pen/VgEMpg?editors=0010)
 
 Check out form examples:
-* [Using Materialize](https://codepen.io/lumaray/pen/gEpMJw?editors=0011)
-* [Using Bootstrap](https://codepen.io/lumaray/pen/EMjwRm?editors=0011)
+* [Using Materialize](https://codepen.io/lumaray/pen/gEpMJw?editors=0010)
+* [Using Bootstrap](https://codepen.io/lumaray/pen/EMjwRm?editors=0010)
 
 This library should help move from explicit HTML markup to javascript objects coding. Just retrieve JSON elements' init objects from a server or initialize them yourself, then convert them into common javascript objects and use with **jel** function (or add as templates for a later use).
 
@@ -119,7 +119,9 @@ This library should help move from explicit HTML markup to javascript objects co
 
 ### Examples 
 
-You can test the lib [in this sandbox](https://codepen.io/lumaray/pen/VgEMpg).
+You can test the lib [in this sandbox](https://codepen.io/lumaray/pen/VgEMpg?editors=0010) or:
+* [using Materialize](https://codepen.io/lumaray/pen/gEpMJw?editors=0010)
+* [using Bootstrap](https://codepen.io/lumaray/pen/EMjwRm?editors=0010)
 
 And / or you can check our [test GitHub page](https://lumaray.github.io/jel/) to see extended examples with templates in action 
 (open developer tools and view the sources)
