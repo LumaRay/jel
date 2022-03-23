@@ -186,6 +186,12 @@ And / or you can check our [test GitHub page](https://lumaray.github.io/jel/) to
         jel("h3")
     ]);
 
+    jel("div", [
+        "h4",
+        {h5:"Hurray!"},
+        el => {el.jel("h6");}
+    ]);
+
     jel("div")
         .jel("h1");
 
