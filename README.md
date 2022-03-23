@@ -35,7 +35,7 @@ This library should help move from explicit HTML markup to javascript objects co
             argument1+ - can be string or {} or [] or function
                 string - add to inner HTML
                 {} - set <JelElementAttributesAndJelProperties>
-                [] - child <JelElementInitializationObjects>
+                [] - child elements of <JelElementInitializationObject> or string or function
                 function - called immediately function(<el>){} : undefined, or boolean, or <JelElementInitializationObject(s)>
                     el - current created HTMLElement
                     - if returns false - this will cancel parsing current created tree object and return undefined from current inner jel function;
