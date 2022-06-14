@@ -26,6 +26,7 @@ jel.settings.mapKeywords = {
     html: "html",
     children: "children",
     chi: "chi",
+    className: "class",
     properties: "properties",
     prop: "prop",
     jel: "jel"
