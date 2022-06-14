@@ -26,7 +26,7 @@ jel.settings.mapKeywords = {
     html: "html",
     children: "children",
     chi: "chi",
-    className: "class",
+    className: "className",
     properties: "properties",
     prop: "prop",
     jel: "jel"
@@ -77,6 +77,8 @@ HTMLElement.prototype.jel = function() {
             jelSetClass(el, oClass[o]);
         } else {
             var strClass = el.getAttribute("class");
+            if (!strClass)
+                strClass = el.getAttribute(jel.settings.mapKeywords.className);
             if (!strClass)
                 strClass = "";
             if (typeof oClass == "function")
@@ -177,6 +179,7 @@ HTMLElement.prototype.jel = function() {
                 jelSetStyle(el, attributes[a]);
             break;
         case "class":
+        case jel.settings.mapKeywords.className:
             if (typeof attributes[a] == "string") {
                 var tmpAttr = el.getAttribute(a);
                 if (tmpAttr === null)
