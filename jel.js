@@ -34,7 +34,7 @@ jel.settings.mapKeywords = {
 
 jel._templates = {};
 
-jel.SetTemplate = function (strTemplateName, jelTemplate) {
+jel.setTemplate = function (strTemplateName, jelTemplate) {
     if (typeof strTemplateName == "string" && 
     (typeof jelTemplate == "function" || typeof jelTemplate == "object" || typeof jelTemplate == "string")) {
         this._templates[strTemplateName] = jelTemplate;
@@ -43,7 +43,7 @@ jel.SetTemplate = function (strTemplateName, jelTemplate) {
         return null;
 }
 
-jel.GetTemplate = function (strTemplateName) {
+jel.getTemplate = function (strTemplateName) {
     return this._templates[strTemplateName];
 }
 
@@ -234,7 +234,7 @@ HTMLElement.prototype.jel = function() {
                 if (typeof attributes[a][c] != "object")
                     break;
                 for (var p in attributes[a][c])
-                    el.jelEx.AddPropertyLink(p, attributes[a][c][p]);
+                    el.jelEx.addPropertyLink(p, attributes[a][c][p]);
                 break;
             default:
             }
@@ -370,7 +370,7 @@ HTMLElement.prototype.jel = function() {
     el.jelEx._namedParent = el;
     el.jelEx._componentRoot = el;
     el.jelEx._topComponentRoot = el;
-    el.jelEx.AddPropertyLink = jelAddPropertyLink;
+    el.jelEx.addPropertyLink = jelAddPropertyLink;
 
     if (typeof this.jelEx != "undefined") {
         el.jelEx._namedParentForChildren = this.jelEx._namedParentForChildren;
