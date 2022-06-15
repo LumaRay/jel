@@ -91,7 +91,7 @@ This library should help move from explicit HTML markup to javascript objects co
 
 ##### Using Templates:
 
-    jel.SetTemplate(<templateName>, <JelTemplate>)
+    jel.setTemplate(<templateName>, <JelTemplate>)
         templateName - string containing the template name to set / change;
         common tag names can be used - this will change / append 
         to their functions when created by jel
@@ -105,7 +105,7 @@ This library should help move from explicit HTML markup to javascript objects co
     Templates can be applied as regular elements creation using jel function. 
     Using additional jel arguments will append to the created template instance.
     
-    jel.GetTemplate(<templateName>) - returns template as a string or {} or [] or function or undefined if not exists
+    jel.getTemplate(<templateName>) - returns template as a string or {} or [] or function or undefined if not exists
 
 ##### Additional settings:
 
@@ -143,7 +143,7 @@ And / or you can check our [test GitHub page](https://lumaray.github.io/jel/) to
 
     someform.jel("input", {type: "password"});
 
-    jel.SetTemplate("label", {label: {style: "color: red;"}});
+    jel.setTemplate("label", {label: {style: "color: red;"}});
     
     document.head.jel("meta");
 
@@ -375,7 +375,7 @@ And / or you can check our [test GitHub page](https://lumaray.github.io/jel/) to
             ]}})
     ]);
 
-    jel.SetTemplate("sample text template name", {div:{chi:[
+    jel.setTemplate("sample text template name", {div:{chi:[
         "In case you have ",
         {i:{chi:["a mixed text content"]}},
         ", it is still possible ",
