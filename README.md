@@ -85,7 +85,7 @@ This library should help move from explicit HTML markup to javascript objects co
          
 ##### Extended jel element functions:
 
-    <jelElement>.jelEx.AddPropertyLink(<target>, <local>) - see <JelElementPropertyLinks>
+    <jelElement>.jelEx.addPropertyLink(<target>, <local>) - see <JelElementPropertyLinks>
         jelElement - HTMLElement, created using jel function.
         target, local - see <JelElementPropertyLinks>
 
